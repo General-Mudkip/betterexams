@@ -122,34 +122,32 @@ function ChoicesForm() {
   
     return (
       <div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className='flex flex-row gap-3'>
             <select name="certificate" value={certificate} onChange={handleChange}>
                 <option value="lc">Leaving Certificate</option>
                 <option value="jc">Junior Certificate</option>
                 <option value="lb">???</option>
             </select>
-        </form>
 
-        <form onSubmit={handleSubmit}>
-          <select name="subject" value={subject} onChange={handleChange}>
-            {subjectChoiceLoad()}
-          </select>
+            <select name="subject" value={subject} onChange={handleChange}>
+                {subjectChoiceLoad()}
+            </select>
   
-          <select name="year" value={year} onChange={handleChange}>
-            {yearChoiceLoad()}
-          </select>
+            <select name="year" value={year} onChange={handleChange}>
+                {yearChoiceLoad()}
+            </select>
   
-          <select name="language" value={language} onChange={handleChange}>
-            <option value="EV">English</option>
-            <option value="IV">Irish</option>
-          </select>
-  
-          <select name="level" value={level} onChange={handleChange}>
-            <option value="Higher">Higher</option>
-            <option value="Ordinary">Ordinary</option>
-            <option value="Foundation">Foundation</option>
-            <option value="Common">Common</option>
-          </select>
+            <select name="language" value={language} onChange={handleChange}>
+                <option value="EV">English</option>
+                <option value="IV">Irish</option>
+            </select>
+    
+            <select name="level" value={level} onChange={handleChange}>
+                <option value="Higher">Higher</option>
+                <option value="Ordinary">Ordinary</option>
+                <option value="Foundation">Foundation</option>
+                <option value="Common">Common</option>
+            </select>
   
           <input type="submit" />
         </form>

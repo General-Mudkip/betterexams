@@ -4,8 +4,6 @@ import { useState, FormEvent, ChangeEvent } from 'react';
 import MyForm from './components/form';
 
 
-
-
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center gap-16 p-24">
