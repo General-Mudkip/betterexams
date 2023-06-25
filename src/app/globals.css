@@ -25,3 +25,12 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+select {
+  @apply text-white bg-transparent border-2 border-spacing-2 mx-1;
+}
+
+option {
+  @apply text-black font-sans;
+
+}
