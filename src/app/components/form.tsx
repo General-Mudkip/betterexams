@@ -30,7 +30,6 @@ function ChoicesForm() {
     }, [certificate, subject, year]);
 
     useEffect(() => { // Have to use two useEffects because of the asynchronity of updating the language state.
-        console.log("After Determine: \n Higher Disabled? : " + higherDisabled + "\n Ordinary Disabled? : " + ordinaryDisabled + "\n Foundation Disabled? : " + foundationDisabled + "\n Common Disabled? : " + commonDisabled)
         grabExamUrls(certificate, subject, year, language, level);
     }, [certificate, subject, year, language, level, englishDisabled, irishDisabled]);
       
@@ -139,9 +138,7 @@ function ChoicesForm() {
 
     function determineLevelAvailability() {
         const exampapers = data[certificate][subject][year]["exampapers"];
-        console.log("\n\n\nTest")
 
-        console.log("\nBefore Determine: \n Higher Disabled? : " + higherDisabled + "\n Ordinary Disabled? : " + ordinaryDisabled + "\n Foundation Disabled? : " + foundationDisabled + "\n Common Disabled? : " + commonDisabled)
         setHigherDisabled(true);
         setOrdinaryDisabled(true);
         setFoundationDisabled(true);
