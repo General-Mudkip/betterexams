@@ -28,8 +28,6 @@ function ChoicesForm() {
     const[foundationDisabled, setFoundationDisabled] = useState<boolean>(false);
     const[commonDisabled, setCommonDisabled] = useState<boolean>(false);
 
-    const examListRef = useRef<HTMLUListElement>(null);
-
     const [examList, setExamList] = useState<string[][]>([]);
 
     let tempExamList:string[][]; // To be used because of useState's asynchronity
@@ -51,27 +49,15 @@ function ChoicesForm() {
       
     // Adds the exam link to the list of exam papers (TEMPORARY)
     function addExamToList(subjectId:string, examName: string, examUrl: string, category: string, year: string) {
-        const examListEl = examListRef.current;
 
         let fullExamUrl:string = `${url}/${category}/${year}/${examUrl}`
 
-        if (examListEl) {
-            let examEl = document.createElement("li");
-            examEl.innerHTML = `<a target="_blank" href="${url}/${category}/${year}/${examUrl}">${category}: ${examName}</a>`;
-        }
-
         tempExamList.push([category, data["subNumsToNames"][subjectId], examName, year, fullExamUrl])
 
-        // const newExamList = [
-        //     ...examList, [category, data["subNumsToNames"][subjectId], examName, year, fullExamUrl],
-        //   ];
-        // console.log("New exam list:" + newExamList)
-        // setExamList(newExamList);
     }
 
     // Returns a list of exam papers for a given subject, year, language, and level.
     function grabExamUrls(cert: string, subjectId: string, year: string, language:string, level: string) {
-        const examListEl = examListRef.current;
         
         tempExamList = []; // Resets the temporary exam list
 
@@ -82,10 +68,6 @@ function ChoicesForm() {
         }
 
         setCorrectLevel();
-      
-        if (examListEl) {
-            examListEl.innerHTML = "<li>Papers:</li>";
-        }
 
         let documentList = data[cert][subjectId][year]; // Navigates to the specific subject and year.
         let categories = Object.keys(documentList); // exampapers, marking schemes, etc.
@@ -272,11 +254,7 @@ function ChoicesForm() {
                 </div>
             </form>
 
-            <ul id="exam-list" className="mt-5 text-white" ref={examListRef}>
-                <li>Papers:</li>
-            </ul>
-
-        <PaperGrid examPaperList={examList} />
+            <PaperGrid examPaperList={examList} />
         </div>
     );
     }
