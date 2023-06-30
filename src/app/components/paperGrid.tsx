@@ -1,36 +1,29 @@
 import PaperCard from "./paperCard";
 
-function PaperGrid() {
-    
-    function refreshCards() {
-        
-    }
+interface PaperGridProps {
+  examPaperList: string[][];
+}
 
-    return(
-        <div className="grid grid-flow-col auto-cols-max gap-4 justify-items-center">
-            <PaperCard 
-                type="exampapers"
-                subject="Mathematics"
-                paperName="Paper One / Higher Level (EV)"
-                year="2019"
-                url="https://www.examinations.ie/archive//exampapers/2019/LC003ALP100EV.pdf"
-            />
-            <PaperCard 
-                type="exampapers"
-                subject="Mathematics"
-                paperName="Paper One / Higher Level (EV)"
-                year="2019"
-                url="https://www.examinations.ie/archive//exampapers/2019/LC003ALP100EV.pdf"
-            />
-            <PaperCard 
-                type="exampapers"
-                subject="Mathematics"
-                paperName="Paper One / Higher Level (EV)"
-                year="2019"
-                url="https://www.examinations.ie/archive//exampapers/2019/LC003ALP100EV.pdf"
-            />
-        </div>
-    )
+function PaperGrid({ examPaperList }: PaperGridProps) {
+  const refreshGrid = () => {
+    console.log("papergrid:" + examPaperList);
+    return examPaperList.map((paper) => (
+      <PaperCard
+        key={paper[0] + paper[1] + paper[2] + paper[3]} // I'm only human after all
+        type={paper[0]}
+        subject={paper[1]}
+        paperName={paper[2]}
+        year={paper[3]}
+        url={paper[4]}
+      />
+    ));
+  };
+
+  return (
+    <div className="grid grid-flow-col auto-cols-max gap-4 justify-items-center">
+      {refreshGrid()}
+    </div>
+  );
 }
 
 export default PaperGrid;

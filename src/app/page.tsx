@@ -12,7 +12,7 @@ export default function Home() {
         <MyForm />
       </div>
 
-      <PaperGrid />
+      <PaperGrid examPaperList={[]}/>
     </main>
   )
 }

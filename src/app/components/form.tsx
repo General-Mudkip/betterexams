@@ -1,11 +1,17 @@
 'use client'
 import { useState, ChangeEvent, useRef, useEffect } from 'react';
+import PaperGrid from './paperGrid';
 
 // INITIALISATION
 var data = require('../files/data.json');
 var subNumsToNames = data["subNumsToNames"]
 
-const url: string = "https://www.examinations.ie/archive/";
+const url: string = "https://www.examinations.ie/archive";
+
+interface paperGridProps {
+    examPaperList: string[][];
+}
+
 
 function ChoicesForm() {
     const [certificate, setCertificate] = useState<string>('lc');
@@ -24,6 +30,10 @@ function ChoicesForm() {
 
     const examListRef = useRef<HTMLUListElement>(null);
 
+    const [examList, setExamList] = useState<string[][]>([]);
+
+    let tempExamList:string[][]; // To be used because of useState's asynchronity
+
     type ExamPaper = {
         details: string;
         url: string;
@@ -35,23 +45,36 @@ function ChoicesForm() {
     }, [certificate, subject, year]);
 
     useEffect(() => { // Have to use two useEffects because of the asynchronity of updating the language state.
-        grabExamUrls(certificate, subject, year, language, level);
+        console.log("Exam list after:" + examList)
+        grabExamUrls(certificate, subject, year, language, level); // Sets up examList
     }, [certificate, subject, year, language, level, englishDisabled, irishDisabled]);
       
-    // Adds the exam link to the list of exam papers (TEMPORARY (hopefully...))
-    function addExamToList(examName: string, examUrl: string, category: string, year: string) {
+    // Adds the exam link to the list of exam papers (TEMPORARY)
+    function addExamToList(subjectId:string, examName: string, examUrl: string, category: string, year: string) {
         const examListEl = examListRef.current;
+
+        let fullExamUrl:string = `${url}/${category}/${year}/${examUrl}`
+
         if (examListEl) {
             let examEl = document.createElement("li");
             examEl.innerHTML = `<a target="_blank" href="${url}/${category}/${year}/${examUrl}">${category}: ${examName}</a>`;
-            examListEl.appendChild(examEl);
         }
+
+        tempExamList.push([category, data["subNumsToNames"][subjectId], examName, year, fullExamUrl])
+
+        // const newExamList = [
+        //     ...examList, [category, data["subNumsToNames"][subjectId], examName, year, fullExamUrl],
+        //   ];
+        // console.log("New exam list:" + newExamList)
+        // setExamList(newExamList);
     }
 
     // Returns a list of exam papers for a given subject, year, language, and level.
     function grabExamUrls(cert: string, subjectId: string, year: string, language:string, level: string) {
         const examListEl = examListRef.current;
-      
+        
+        tempExamList = []; // Resets the temporary exam list
+
         if (englishDisabled) {
             setLanguage("IV");
         } else if (irishDisabled) {
@@ -63,7 +86,7 @@ function ChoicesForm() {
         if (examListEl) {
             examListEl.innerHTML = "<li>Papers:</li>";
         }
-        
+
         let documentList = data[cert][subjectId][year]; // Navigates to the specific subject and year.
         let categories = Object.keys(documentList); // exampapers, marking schemes, etc.
       
@@ -72,19 +95,21 @@ function ChoicesForm() {
                 let docName = doc["details"];
                 let docUrl = doc["url"];
         
-            // TODO: Sort out this mess
-            if ((docName.includes(language) || docName.includes("BV") || docName.includes("File")) && (docName.includes(level) || docName.includes("Common") || docName.includes("File"))) {
-                if (!(!(level == "Foundation") && docName.includes("Foundation") && docName.includes("File"))) { // Ensures that the Foundation level sound file isn't added to the list when a level other than Foundation is selected.
-                    
-                    if(!(documentList["exampapers"].some((paperName: ExamPaper) => paperName.details.includes("Foundation") && !(docName.includes("Foundation")) && level == "Foundation"))) { // Sorry if you're reading this. Fix to an obscure bug where Sound Files from both Higher/Ordinary and Foundation would be included when "Foundation" was selected.
-                        addExamToList(docName, docUrl, cat, year);
+                // TODO: Sort out this mess
+                if ((docName.includes(language) || docName.includes("BV") || docName.includes("File")) && (docName.includes(level) || docName.includes("Common") || docName.includes("File"))) {
+                    if (!(!(level == "Foundation") && docName.includes("Foundation") && docName.includes("File"))) { // Ensures that the Foundation level sound file isn't added to the list when a level other than Foundation is selected.
+                        
+                        if(!(documentList["exampapers"].some((paperName: ExamPaper) => paperName.details.includes("Foundation") && !(docName.includes("Foundation")) && level == "Foundation"))) { // Sorry if you're reading this. Fix to an obscure bug where Sound Files from both Higher/Ordinary and Foundation would be included when "Foundation" was selected.
+                            addExamToList(subjectId, docName, docUrl, cat, year);
+                        }
+                        
                     }
-                    
                 }
             }
-          }
         }
-      }
+
+        setExamList(tempExamList); // Sets the exam list to the newly generated list
+    }
 
     function setCorrectLevel() { // If Ordinary or Higher is disabled; no clue. Better way TODO this.
         if (level === "Higher" && higherDisabled) {
@@ -250,6 +275,8 @@ function ChoicesForm() {
             <ul id="exam-list" className="mt-5 text-white" ref={examListRef}>
                 <li>Papers:</li>
             </ul>
+
+        <PaperGrid examPaperList={examList} />
         </div>
     );
     }
