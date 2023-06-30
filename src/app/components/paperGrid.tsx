@@ -20,7 +20,7 @@ function PaperGrid({ examPaperList }: PaperGridProps) {
   };
 
   return (
-    <div className="grid grid-flow-col auto-cols-max gap-4 justify-items-center">
+    <div className="grid grid-cols-3 gap-4 mt-8 justify-items-center">
       {refreshGrid()}
     </div>
   );

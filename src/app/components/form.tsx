@@ -214,8 +214,8 @@ function ChoicesForm() {
     }
 
     return (
-        <div>
-            <form className='flex flex-row gap-3'>
+        <>
+            <form className='flex flex-row gap-3 justify-center'>
                 <select name="certificate" value={certificate} onChange={handleChange}>
                     <option value="lc">Leaving Certificate</option>
                     <option value="jc">Junior Certificate</option>
@@ -255,7 +255,7 @@ function ChoicesForm() {
             </form>
 
             <PaperGrid examPaperList={examList} />
-        </div>
+        </>
     );
     }
 
