@@ -24,6 +24,11 @@ function ChoicesForm() {
 
     const examListRef = useRef<HTMLUListElement>(null);
 
+    type ExamPaper = {
+        details: string;
+        url: string;
+      };
+
     useEffect(() => {
         determineLanguageAvailability();
         determineLevelAvailability();
@@ -48,26 +53,34 @@ function ChoicesForm() {
         const examListEl = examListRef.current;
       
         if (englishDisabled) {
-          setLanguage("IV");
+            setLanguage("IV");
         } else if (irishDisabled) {
-          setLanguage("EV");
+            setLanguage("EV");
         }
 
         setCorrectLevel();
       
         if (examListEl) {
-          examListEl.innerHTML = "<li>Papers:</li>";
+            examListEl.innerHTML = "<li>Papers:</li>";
         }
+        
         let documentList = data[cert][subjectId][year]; // Navigates to the specific subject and year.
         let categories = Object.keys(documentList); // exampapers, marking schemes, etc.
       
         for (const cat of categories) {
-          for (const doc of documentList[cat]) {
-            let docName = doc["details"];
-            let docUrl = doc["url"];
-      
+            for (const doc of documentList[cat]) {
+                let docName = doc["details"];
+                let docUrl = doc["url"];
+        
+            // TODO: Sort out this mess
             if ((docName.includes(language) || docName.includes("BV") || docName.includes("File")) && (docName.includes(level) || docName.includes("Common") || docName.includes("File"))) {
-              addExamToList(docName, docUrl, cat, year);
+                if (!(!(level == "Foundation") && docName.includes("Foundation") && docName.includes("File"))) { // Ensures that the Foundation level sound file isn't added to the list when a level other than Foundation is selected.
+                    
+                    if(!(documentList["exampapers"].some((paperName: ExamPaper) => paperName.details.includes("Foundation") && !(docName.includes("Foundation")) && level == "Foundation"))) { // Sorry if you're reading this. Fix to an obscure bug where Sound Files from both Higher/Ordinary and Foundation would be included when "Foundation" was selected.
+                        addExamToList(docName, docUrl, cat, year);
+                    }
+                    
+                }
             }
           }
         }
@@ -165,79 +178,79 @@ function ChoicesForm() {
 
     // Loads the subject choices from the data file dependent on what subject is selected
     function subjectChoiceLoad() {
-    return Object.entries(subNumsToNames).map(([id]) => {
-        if (data[certificate].hasOwnProperty(id)) {
-        return (
-            <option key={id} value={id}>
-            {subNumsToNames[id]}
-            </option>
-        );
-        } else {
-        return null; // Skip rendering the option if the ID doesn't exist in data["lc"]
-        }
-    });
+        return Object.entries(subNumsToNames).map(([id]) => {
+            if (data[certificate].hasOwnProperty(id)) {
+            return (
+                <option key={id} value={id}>
+                {subNumsToNames[id]}
+                </option>
+            );
+            } else {
+            return null; // Skip rendering the option if the ID doesn't exist in data["lc"]
+            }
+        });
     }
 
     // Loads the year choices dependent on what subject is selected
     function yearChoiceLoad() {
-    return Object.entries(data[certificate][subject]).map(([year]) => {
-        if (data[certificate][subject].hasOwnProperty(year)) {
-        return (
-            <option key={year} value={year}>
-            {year}
-            </option>
-        );
-        } else {
-        return null;
-        }
-    });
+        return Object.entries(data[certificate][subject]).map(([year]) => {
+            if (data[certificate][subject].hasOwnProperty(year)) {
+            return (
+                <option key={year} value={year}>
+                {year}
+                </option>
+            );
+            } else {
+            return null;
+            }
+        });
     }
 
     return (
-    <div>
-        <form className='flex flex-row gap-3'>
-        <select name="certificate" value={certificate} onChange={handleChange}>
-            <option value="lc">Leaving Certificate</option>
-            <option value="jc">Junior Certificate</option>
-        </select>
+        <div>
+            <form className='flex flex-row gap-3'>
+                <select name="certificate" value={certificate} onChange={handleChange}>
+                    <option value="lc">Leaving Certificate</option>
+                    <option value="jc">Junior Certificate</option>
+                </select>
 
-        <select name="subject" value={subject} onChange={handleChange}>
-            {subjectChoiceLoad()}
-        </select>
+                <select name="subject" value={subject} onChange={handleChange}>
+                    {subjectChoiceLoad()}
+                </select>
 
-        <select name="year" value={year} onChange={handleChange}>
-            {yearChoiceLoad()}
-        </select>
+                <select name="year" value={year} onChange={handleChange}>
+                    {yearChoiceLoad()}
+                </select>
 
-        <select name="level" value={level} onChange={handleChange}>
-            <option className='disabled:bg-red-400' value="Higher" disabled={higherDisabled}>Higher</option>
-            <option className='disabled:bg-red-400' value="Ordinary" disabled={ordinaryDisabled}>Ordinary</option>
-            <option className='disabled:bg-red-400' value="Foundation" disabled={foundationDisabled}>Foundation</option>
-            <option className='disabled:bg-red-400' value="Common" disabled={commonDisabled}>Common</option>
-        </select>
+                <select name="level" value={level} onChange={handleChange}>
+                    <option className='disabled:bg-red-400' value="Higher" disabled={higherDisabled}>Higher</option>
+                    <option className='disabled:bg-red-400' value="Ordinary" disabled={ordinaryDisabled}>Ordinary</option>
+                    <option className='disabled:bg-red-400' value="Foundation" disabled={foundationDisabled}>Foundation</option>
+                    <option className='disabled:bg-red-400' value="Common" disabled={commonDisabled}>Common</option>
+                </select>
 
-        <div className="inline-flex">
-            <button onClick={() => setLanguage("EV")} type="button" className={`text-white border-2 py-2 px-4 rounded-l disabled:text-red-900 
-            ${language === "EV" ? "bg-gray-900" : "bg-black"}
-            ${irishDisabled ? "bg-gray-900" : "bg-black"}
-            `}
-            disabled={englishDisabled}>
-            English
-            </button>
-            <button onClick={() => setLanguage("IV")} type="button" className={`text-white border-2 py-2 px-4 rounded-r disabled:text-red-900 
-            ${language === "IV" ? "bg-gray-900" : "bg-black"}
-            ${englishDisabled ? "bg-gray-900" : "bg-black"}
-            `} 
-            disabled={irishDisabled}>
-            Irish
-            </button>
+                <div className="inline-flex">
+                    <button onClick={() => setLanguage("EV")} type="button" className={`text-white border-2 py-2 px-4 rounded-l disabled:text-red-900 
+                    ${language === "EV" ? "bg-gray-900" : "bg-black"}
+                    ${irishDisabled ? "bg-gray-900" : "bg-black"}
+                    `}
+                    disabled={englishDisabled}>
+                    English
+                    </button>
+                    <button onClick={() => setLanguage("IV")} type="button" className={`text-white border-2 py-2 px-4 rounded-r disabled:text-red-900 
+                    ${language === "IV" ? "bg-gray-900" : "bg-black"}
+                    ${englishDisabled ? "bg-gray-900" : "bg-black"}
+                    `} 
+                    disabled={irishDisabled}>
+                    Irish
+                    </button>
+                </div>
+            </form>
+
+            <ul id="exam-list" className="mt-5 text-white" ref={examListRef}>
+                <li>Papers:</li>
+            </ul>
         </div>
-        </form>
-
-        <ul id="exam-list" className="mt-5 text-white" ref={examListRef}>
-        <li>Papers:</li>
-        </ul>
-    </div>
     );
     }
 

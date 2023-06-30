@@ -1,7 +1,7 @@
 'use client'
-import Image from 'next/image'
-import { useState, FormEvent, ChangeEvent } from 'react';
 import MyForm from './components/form';
+import PaperCard from './components/paperCard';
+import PaperGrid from './components/paperGrid';
 
 
 export default function Home() {
@@ -11,6 +11,8 @@ export default function Home() {
       <div className="text-slate-400">
         <MyForm />
       </div>
+
+      <PaperGrid />
     </main>
   )
 }
