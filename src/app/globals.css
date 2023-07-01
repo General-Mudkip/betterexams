@@ -27,10 +27,16 @@ body {
 }
 
 select {
-  @apply text-white bg-transparent border-2 border-spacing-2 mx-1 rounded-md p-3;
+  @apply text-white bg-transparent border-2 border-spacing-2 mx-1 rounded-md p-3
+  transition-all duration-200
+  hover:cursor-pointer hover:border-gray-400 hover:shadow-md;
 }
 
 option {
-  @apply text-black font-sans;
+  @apply text-black font-sans hover:cursor-pointer;
+}
 
+button {
+  @apply transition-all duration-200
+  hover:border-gray-300;
 }

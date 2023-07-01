@@ -42,8 +42,7 @@ function ChoicesForm() {
         determineLevelAvailability();
     }, [certificate, subject, year]);
 
-    useEffect(() => { // Have to use two useEffects because of the asynchronity of updating the language state.
-        console.log("Exam list after:" + examList)
+    useEffect(() => {
         grabExamUrls(certificate, subject, year, language, level); // Sets up examList
     }, [certificate, subject, year, language, level, englishDisabled, irishDisabled]);
       
@@ -202,21 +201,23 @@ function ChoicesForm() {
     function yearChoiceLoad() {
         return Object.entries(data[certificate][subject]).map(([year]) => {
             if (data[certificate][subject].hasOwnProperty(year)) {
-            return (
-                <option key={year} value={year}>
-                {year}
-                </option>
-            );
+                return (
+                    <option key={year} value={year}>
+                    {year}
+                    </option>
+                );
             } else {
-            return null;
+                return null;
             }
-        });
+        }).reverse();
     }
 
     return (
         <>
-            <form className='flex flex-row gap-3 justify-center'>
-                <select name="certificate" value={certificate} onChange={handleChange}>
+            <form className='flex flex-row flex-wrap gap-3 justify-center hover:cursor-pointer'>
+                <select name="certificate" value={certificate} onChange={handleChange}
+                    className=""
+                >
                     <option value="lc">Leaving Certificate</option>
                     <option value="jc">Junior Certificate</option>
                 </select>
@@ -237,16 +238,18 @@ function ChoicesForm() {
                 </select>
 
                 <div className="inline-flex">
-                    <button onClick={() => setLanguage("EV")} type="button" className={`text-white border-2 py-2 px-4 rounded-l disabled:text-red-900 
-                    ${language === "EV" ? "bg-gray-900" : "bg-black"}
-                    ${irishDisabled ? "bg-gray-900" : "bg-black"}
+                    <button onClick={() => setLanguage("EV")} type="button" className={`text-white border-2 py-2 px-4 rounded-l
+                    enabled:hover:bg-gray-800
+                    disabled:text-red-900 disabled:italic
+                    ${language === "EV" ? "bg-gray-900 font-bold" : "bg-black font-normal"}
                     `}
                     disabled={englishDisabled}>
                     English
                     </button>
-                    <button onClick={() => setLanguage("IV")} type="button" className={`text-white border-2 py-2 px-4 rounded-r disabled:text-red-900 
-                    ${language === "IV" ? "bg-gray-900" : "bg-black"}
-                    ${englishDisabled ? "bg-gray-900" : "bg-black"}
+                    <button onClick={() => setLanguage("IV")} type="button" className={`text-white border-2 py-2 px-4 rounded-r
+                    enabled:hover:bg-gray-800
+                    disabled:text-red-900 disabled:italic
+                    ${language === "IV" ? "bg-gray-900 font-bold" : "bg-black font-normal"}
                     `} 
                     disabled={irishDisabled}>
                     Irish

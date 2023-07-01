@@ -6,7 +6,6 @@ interface PaperGridProps {
 
 function PaperGrid({ examPaperList }: PaperGridProps) {
   const refreshGrid = () => {
-    console.log("papergrid:" + examPaperList);
     return examPaperList.map((paper) => (
       <PaperCard
         key={paper[0] + paper[1] + paper[2] + paper[3]} // I'm only human after all
@@ -20,9 +19,9 @@ function PaperGrid({ examPaperList }: PaperGridProps) {
   };
 
   return (
-    <div className="grid grid-cols-3 gap-4 mt-8 justify-items-center">
+    <div className="flex flex-row flex-wrap gap-8 mt-8 justify-center">
       {refreshGrid()}
-    </div>
+    </div> // 
   );
 }
 
