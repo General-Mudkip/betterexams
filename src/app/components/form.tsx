@@ -1,17 +1,14 @@
 'use client'
-import { useState, ChangeEvent, useRef, useEffect } from 'react';
-import PaperGrid from './paperGrid';
+import { useState, ChangeEvent, useEffect } from 'react';
+import PaperGrid from './PaperGrid';
+import { Listbox, Transition } from '@headlessui/react';
+import { ChevronUpDownIcon } from '@heroicons/react/20/solid'
 
 // INITIALISATION
 var data = require('../files/data.json');
 var subNumsToNames = data["subNumsToNames"]
 
 const url: string = "https://www.examinations.ie/archive";
-
-interface paperGridProps {
-    examPaperList: string[][];
-}
-
 
 function ChoicesForm() {
     const [certificate, setCertificate] = useState<string>('lc');
@@ -31,6 +28,16 @@ function ChoicesForm() {
     const [examList, setExamList] = useState<string[][]>([]);
 
     let tempExamList:string[][]; // To be used because of useState's asynchronity
+    let currentLevel: string = "Higher";
+
+    let tempSubject:string = subject;
+
+    let tempHigherDisabled: boolean = false;
+    let tempOrdinaryDisabled: boolean = false;
+    let tempFoundationDisabled: boolean = false;
+    let tempCommonDisabled: boolean = false;
+
+    determineLevelAvailability()    
 
     type ExamPaper = {
         details: string;
@@ -66,7 +73,7 @@ function ChoicesForm() {
             setLanguage("EV");
         }
 
-        setCorrectLevel();
+        determineLevelAvailability()
 
         let documentList = data[cert][subjectId][year]; // Navigates to the specific subject and year.
         let categories = Object.keys(documentList); // exampapers, marking schemes, etc.
@@ -75,9 +82,8 @@ function ChoicesForm() {
             for (const doc of documentList[cat]) {
                 let docName = doc["details"];
                 let docUrl = doc["url"];
-        
-                // TODO: Sort out this mess
-                if ((docName.includes(language) || docName.includes("BV") || docName.includes("File")) && (docName.includes(level) || docName.includes("Common") || docName.includes("File"))) {
+
+                if ((docName.includes(language) || docName.includes("BV") || docName.includes("File") || docName.includes("Picture") || docName.includes("Map") || docName.includes("Source")) && (docName.includes(level) || docName.includes("Common") || docName.includes("File"))) {
                     if (!(!(level == "Foundation") && docName.includes("Foundation") && docName.includes("File"))) { // Ensures that the Foundation level sound file isn't added to the list when a level other than Foundation is selected.
                         
                         if(!(documentList["exampapers"].some((paperName: ExamPaper) => paperName.details.includes("Foundation") && !(docName.includes("Foundation")) && level == "Foundation"))) { // Sorry if you're reading this. Fix to an obscure bug where Sound Files from both Higher/Ordinary and Foundation would be included when "Foundation" was selected.
@@ -90,18 +96,6 @@ function ChoicesForm() {
         }
 
         setExamList(tempExamList); // Sets the exam list to the newly generated list
-    }
-
-    function setCorrectLevel() { // If Ordinary or Higher is disabled; no clue. Better way TODO this.
-        if (level === "Higher" && higherDisabled) {
-            setLevel("Ordinary");
-        } else if (level === "Ordinary" && ordinaryDisabled) {
-            setLevel("Higher");
-        } else if (level === "Foundation" && foundationDisabled) {
-            setLevel("Higher");
-        } else if (level === "Common" && commonDisabled) {
-            setLevel("Higher");
-        }
     }
 
     const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -118,11 +112,15 @@ function ChoicesForm() {
             case 'subject':
                 setSubject(value);
 
+                tempSubject = value;
+
                 // Check if the selected year is valid for the new subject
                 if (!data[certificate][value].hasOwnProperty(year)) {
                     // If the selected year is invalid, update the year state
                     setYear(Object.keys(data[certificate][value])[0]);
                 }
+
+                handleLevelChange(currentLevel)
                 break;
             case 'year':
                 setYear(value);
@@ -137,6 +135,27 @@ function ChoicesForm() {
                 break;
         }
     };
+
+    const handleLevelChange = (value: string) => {
+        currentLevel = value;
+        determineLevelAvailability();
+        setCorrectLevel(currentLevel);
+        setLevel(currentLevel)
+    }
+
+    function setCorrectLevel(curLevel: string) {
+        if (curLevel === "Higher" && tempHigherDisabled) {
+            setLevel("Ordinary");
+        } else if (curLevel === "Ordinary" && tempOrdinaryDisabled) {
+            setLevel("Higher");
+        } else if (curLevel === "Foundation" && tempFoundationDisabled) {
+            setLevel("Higher");
+        } else if (curLevel === "Common" && tempCommonDisabled) {
+            setLevel("Higher");
+        } else {
+            setLevel(curLevel);
+        }
+    }
 
     function determineLanguageAvailability() { // I promise this is the best way to do this
 
@@ -156,27 +175,27 @@ function ChoicesForm() {
     }
 
     function determineLevelAvailability() {
-        const exampapers = data[certificate][subject][year]["exampapers"];
+        const exampapers = data[certificate][tempSubject][year]["exampapers"];
 
-        setHigherDisabled(true);
-        setOrdinaryDisabled(true);
-        setFoundationDisabled(true);
-        setCommonDisabled(true);
+        tempHigherDisabled = true;
+        tempOrdinaryDisabled = true;
+        tempFoundationDisabled = true;
+        tempCommonDisabled = true;
 
         for (const doc of exampapers) {
             const docName = doc.details;
             if (!(docName.includes("Map") || docName.includes("Illustration"))) { // Prevents common level material (e.g Maps in geography) from enabling Common level
                 if (docName.includes("Higher")) {
-                    setHigherDisabled(false);
+                    tempHigherDisabled = false;
                 }
                 if (docName.includes("Ordinary")) {
-                    setOrdinaryDisabled(false);
+                    tempOrdinaryDisabled = false;
                 }
                 if (docName.includes("Foundation")) {
-                    setFoundationDisabled(false);
+                    tempFoundationDisabled = false;
                 }
                 if (docName.includes("Common")) {
-                    setCommonDisabled(false);
+                    tempCommonDisabled = false;
                 }
             }
         }
@@ -230,12 +249,64 @@ function ChoicesForm() {
                     {yearChoiceLoad()}
                 </select>
 
-                <select name="level" value={level} onChange={handleChange}>
-                    <option className='disabled:bg-red-400' value="Higher" disabled={higherDisabled}>Higher</option>
-                    <option className='disabled:bg-red-400' value="Ordinary" disabled={ordinaryDisabled}>Ordinary</option>
-                    <option className='disabled:bg-red-400' value="Foundation" disabled={foundationDisabled}>Foundation</option>
-                    <option className='disabled:bg-red-400' value="Common" disabled={commonDisabled}>Common</option>
-                </select>
+                <div className='w-32'>
+                    
+                    <Listbox name="level" defaultValue={level} onChange={handleLevelChange}>
+                        <div className="relative">
+                            <Listbox.Button className="text-white text-left bg-zinc-900 border-2 border-spacing-2 border-white w-full rounded-md p-3 hover:border-slate-400 transition-all duration-200">
+                                {level}
+                                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                    <ChevronUpDownIcon
+                                        className="h-5 w-5 text-gray-400"
+                                        aria-hidden="true"
+                                    />
+                                </span>
+                            </Listbox.Button>
+                            
+                            <Listbox.Options className="absolute mt-2 z-50 w-full max-h-60 overflow-auto rounded-md bg-gray-950 border-2 border-white">
+                                <Listbox.Option  value="Higher" disabled={tempHigherDisabled} className={
+                                    `top-0 h-full ui-selected:bg-gray-700 py-[0.15rem] pt-[0.3rem]
+                                    ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100
+                                    ${tempHigherDisabled ? "text-red-500 !bg-red-950/70 italic line-through" : "text-white"}`
+                                    }>
+                                    <span className="pl-1">
+                                        Higher
+                                    </span>
+                                 </Listbox.Option>
+
+                                 <Listbox.Option value="Ordinary" disabled={tempOrdinaryDisabled} className={
+                                    `top-0 h-full ui-selected:bg-gray-700 py-[0.15rem]
+                                    ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100
+                                    ${tempOrdinaryDisabled ? "text-red-500 !bg-red-950/70 italic line-through" : "text-white"}`
+                                    }>
+                                    <span className="pl-1">
+                                        Ordinary
+                                    </span>
+                                 </Listbox.Option>
+
+                                 <Listbox.Option value="Foundation" disabled={tempFoundationDisabled} className={
+                                    `top-0 h-full ui-selected:bg-gray-700 py-[0.15rem]
+                                    ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100
+                                    ${tempFoundationDisabled ? "text-red-500 !bg-red-950/70 italic line-through" : "text-white"}`
+                                    }>
+                                    <span className="pl-1">
+                                        Foundation
+                                    </span>
+                                 </Listbox.Option>
+
+                                 <Listbox.Option value="Common" disabled={tempCommonDisabled} className={
+                                    `top-0 h-full ui-selected:bg-gray-700 py-[0.15rem] pb-[0.3rem]
+                                    ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100
+                                    ${tempCommonDisabled ? "text-red-500 !bg-red-950/70 italic line-through" : "text-white"}`
+                                    }>
+                                    <span className="pl-1">
+                                        Common
+                                    </span>
+                                 </Listbox.Option>
+                            </Listbox.Options>
+                        </div>
+                    </Listbox>
+                </div>
 
                 <div className="inline-flex">
                     <button onClick={() => setLanguage("EV")} type="button" className={`text-white border-2 py-2 px-4 rounded-l
