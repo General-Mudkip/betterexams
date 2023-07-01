@@ -1,4 +1,4 @@
-import PaperCard from "./paperCard";
+import PaperCard from "./PaperCard";
 
 interface PaperGridProps {
   examPaperList: string[][];

@@ -1,8 +1,5 @@
 'use client'
-import MyForm from './components/form';
-import PaperCard from './components/paperCard';
-import PaperGrid from './components/paperGrid';
-
+import ChoicesForm from './components/Form';
 
 export default function Home() {
   return (
@@ -10,7 +7,7 @@ export default function Home() {
       <h1 className="text-6xl font-bold text-center">Better Exams</h1>
 
       <div className="text-slate-400 items-center">
-        <MyForm />
+        <ChoicesForm />
       </div>
     </main>
   )
