@@ -2,7 +2,7 @@
 import { useState, ChangeEvent, useEffect } from 'react';
 import PaperGrid from './PaperGrid';
 import { Listbox, Transition } from '@headlessui/react';
-import { ChevronUpDownIcon } from '@heroicons/react/20/solid'
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 
 // INITIALISATION
 var data = require('../files/data.json');
@@ -249,8 +249,9 @@ function ChoicesForm() {
                     {yearChoiceLoad()}
                 </select>
 
-                <div className='w-32'>
+                <div className='w-40'>
                     
+                    {/* TODO: Commit a cardinal sin and make these classes. */}
                     <Listbox name="level" defaultValue={level} onChange={handleLevelChange}>
                         <div className="relative">
                             <Listbox.Button className="text-white text-left bg-zinc-900 border-2 border-spacing-2 border-white w-full rounded-md p-3 hover:border-slate-400 transition-all duration-200">
@@ -265,43 +266,65 @@ function ChoicesForm() {
                             
                             <Listbox.Options className="absolute mt-2 z-50 w-full max-h-60 overflow-auto rounded-md bg-gray-950 border-2 border-white">
                                 <Listbox.Option  value="Higher" disabled={tempHigherDisabled} className={
-                                    `top-0 h-full ui-selected:bg-gray-700 py-[0.15rem] pt-[0.3rem]
+                                    `top-0 h-full relative pl-10 ui-selected:bg-gray-700 py-[0.3rem] pt-[0.5rem]
                                     ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100
                                     ${tempHigherDisabled ? "text-red-500 !bg-red-950/70 italic line-through" : "text-white"}`
                                     }>
-                                    <span className="pl-1">
-                                        Higher
-                                    </span>
+                                        
+                                    <>
+                                        <span className="block truncate font-normal ui-selected:font-medium">
+                                            Higher
+                                        </span>
+                                        <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
+                                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                        </span>
+                                    </>
                                  </Listbox.Option>
 
                                  <Listbox.Option value="Ordinary" disabled={tempOrdinaryDisabled} className={
-                                    `top-0 h-full ui-selected:bg-gray-700 py-[0.15rem]
+                                    `top-0 h-full relative pl-10 ui-selected:bg-gray-700 py-[0.3rem]
                                     ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100
                                     ${tempOrdinaryDisabled ? "text-red-500 !bg-red-950/70 italic line-through" : "text-white"}`
                                     }>
-                                    <span className="pl-1">
-                                        Ordinary
-                                    </span>
+
+                                    <>
+                                        <span className="block truncate font-normal ui-selected:font-medium">
+                                            Ordinary
+                                        </span>
+                                        <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
+                                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                        </span>
+                                    </>
                                  </Listbox.Option>
 
                                  <Listbox.Option value="Foundation" disabled={tempFoundationDisabled} className={
-                                    `top-0 h-full ui-selected:bg-gray-700 py-[0.15rem]
+                                    `top-0 h-full relative pl-10 ui-selected:bg-gray-700 py-[0.3rem]
                                     ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100
                                     ${tempFoundationDisabled ? "text-red-500 !bg-red-950/70 italic line-through" : "text-white"}`
                                     }>
-                                    <span className="pl-1">
-                                        Foundation
-                                    </span>
+                                    <>
+                                        <span className="block truncate font-normal ui-selected:font-medium">
+                                            Foundation
+                                        </span>
+                                        <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
+                                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                        </span>
+                                    </>
                                  </Listbox.Option>
 
                                  <Listbox.Option value="Common" disabled={tempCommonDisabled} className={
-                                    `top-0 h-full ui-selected:bg-gray-700 py-[0.15rem] pb-[0.3rem]
+                                    `top-0 h-full relative pl-10 ui-selected:bg-gray-700 py-[0.3rem] pb-[0.6rem]
                                     ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100
                                     ${tempCommonDisabled ? "text-red-500 !bg-red-950/70 italic line-through" : "text-white"}`
                                     }>
-                                    <span className="pl-1">
-                                        Common
-                                    </span>
+                                    <>
+                                        <span className="block truncate font-normal ui-selected:font-medium">
+                                            Common
+                                        </span>
+                                        <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
+                                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                        </span>
+                                    </>
                                  </Listbox.Option>
                             </Listbox.Options>
                         </div>
