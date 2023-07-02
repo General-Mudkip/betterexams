@@ -83,10 +83,11 @@ function ChoicesForm() {
                 if ((docName.includes(language) || docName.includes("BV") || docName.includes("File") || docName.includes("Picture") || docName.includes("Map") || docName.includes("Source")) && (docName.includes(level) || docName.includes("Common") || docName.includes("File"))) {
                     if (!(!(level == "Foundation") && docName.includes("Foundation") && docName.includes("File"))) { // Ensures that the Foundation level sound file isn't added to the list when a level other than Foundation is selected.
                         
-                        if(!(documentList[cat].some((paperName: ExamPaper) => paperName.details.includes("Foundation") && !(docName.includes("Foundation")) && level == "Foundation"))) { // Sorry if you're reading this. Fix to an obscure bug where Sound Files from both Higher/Ordinary and Foundation would be included when "Foundation" was selected.
-                            addExamToList(subjectId, docName, docUrl, cat, year);
+                        if("exampapers" in documentList) { // Prevents the "exampapers" key from being accessed if it doesn't exist
+                            if(!(documentList["exampapers"].some((paperName: ExamPaper) => paperName.details.includes("Foundation") && !(docName.includes("Foundation")) && level == "Foundation"))) { // Sorry if you're reading this. Fix to an obscure bug where Sound Files from both Higher/Ordinary and Foundation would be included when "Foundation" was selected.
+                                addExamToList(subjectId, docName, docUrl, cat, year);
+                            }
                         }
-                        
                     }
                 }
             }
