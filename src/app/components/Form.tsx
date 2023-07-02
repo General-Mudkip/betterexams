@@ -199,7 +199,7 @@ function ChoicesForm() {
         return Object.entries(data[certificate][subject]).map(([yeare]) => {
             if (data[certificate][subject].hasOwnProperty(yeare)) {
                 return (
-                    <Listbox.Option  value={yeare} className={
+                    <Listbox.Option key={yeare} value={yeare} className={
                         `top-0 h-full relative pl-10 ui-selected:bg-gray-700 py-[0.3rem] pt-[0.5rem]
                         ui-active:bg-zinc-800 ui-not-active:bg-black`
                         }>
