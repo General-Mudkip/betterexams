@@ -83,7 +83,7 @@ function ChoicesForm() {
                 if ((docName.includes(language) || docName.includes("BV") || docName.includes("File") || docName.includes("Picture") || docName.includes("Map") || docName.includes("Source")) && (docName.includes(level) || docName.includes("Common") || docName.includes("File"))) {
                     if (!(!(level == "Foundation") && docName.includes("Foundation") && docName.includes("File"))) { // Ensures that the Foundation level sound file isn't added to the list when a level other than Foundation is selected.
                         
-                        if(!(documentList["exampapers"].some((paperName: ExamPaper) => paperName.details.includes("Foundation") && !(docName.includes("Foundation")) && level == "Foundation"))) { // Sorry if you're reading this. Fix to an obscure bug where Sound Files from both Higher/Ordinary and Foundation would be included when "Foundation" was selected.
+                        if(!(documentList[cat].some((paperName: ExamPaper) => paperName.details.includes("Foundation") && !(docName.includes("Foundation")) && level == "Foundation"))) { // Sorry if you're reading this. Fix to an obscure bug where Sound Files from both Higher/Ordinary and Foundation would be included when "Foundation" was selected.
                             addExamToList(subjectId, docName, docUrl, cat, year);
                         }
                         
@@ -138,27 +138,30 @@ function ChoicesForm() {
     }
 
     function determineLevelAvailability() {
-        const exampapers = data[certificate][tempSubject][tempYear]["exampapers"];
 
-        tempHigherDisabled = true;
-        tempOrdinaryDisabled = true;
-        tempFoundationDisabled = true;
-        tempCommonDisabled = true;
+        if ("exampapers" in data[certificate][tempSubject][tempYear]) {
+            const exampapers = data[certificate][tempSubject][tempYear]["exampapers"];
 
-        for (const doc of exampapers) {
-            const docName = doc.details;
-            if (!(docName.includes("Map") || docName.includes("Illustration"))) { // Prevents common level material (e.g Maps in geography) from enabling Common level
-                if (docName.includes("Higher")) {
-                    tempHigherDisabled = false;
-                }
-                if (docName.includes("Ordinary")) {
-                    tempOrdinaryDisabled = false;
-                }
-                if (docName.includes("Foundation")) {
-                    tempFoundationDisabled = false;
-                }
-                if (docName.includes("Common")) {
-                    tempCommonDisabled = false;
+            tempHigherDisabled = true;
+            tempOrdinaryDisabled = true;
+            tempFoundationDisabled = true;
+            tempCommonDisabled = true;
+    
+            for (const doc of exampapers) {
+                const docName = doc.details;
+                if (!(docName.includes("Map") || docName.includes("Illustration"))) { // Prevents common level material (e.g Maps in geography) from enabling Common level
+                    if (docName.includes("Higher")) {
+                        tempHigherDisabled = false;
+                    }
+                    if (docName.includes("Ordinary")) {
+                        tempOrdinaryDisabled = false;
+                    }
+                    if (docName.includes("Foundation")) {
+                        tempFoundationDisabled = false;
+                    }
+                    if (docName.includes("Common")) {
+                        tempCommonDisabled = false;
+                    }
                 }
             }
         }
