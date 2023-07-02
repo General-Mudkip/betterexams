@@ -333,17 +333,17 @@ function ChoicesForm() {
 
                 <div className="inline-flex">
                     <button onClick={() => setLanguage("EV")} type="button" className={`text-white border-2 py-2 px-4 rounded-l
-                    enabled:hover:bg-gray-800
-                    disabled:text-red-900 disabled:italic
-                    ${language === "EV" ? "bg-gray-900 font-bold" : "bg-black font-normal"}
+                    enabled:hover:bg-zinc-800
+                    disabled:text-slate-300 disabled:italic
+                    ${language === "EV" ? "bg-zinc-900 font-bold" : "bg-zinc-900 font-normal"}
                     `}
                     disabled={englishDisabled}>
                     English
                     </button>
                     <button onClick={() => setLanguage("IV")} type="button" className={`text-white border-2 py-2 px-4 rounded-r
-                    enabled:hover:bg-gray-800
-                    disabled:text-red-900 disabled:italic
-                    ${language === "IV" ? "bg-gray-900 font-bold" : "bg-black font-normal"}
+                    enabled:hover:bg-zinc-800
+                    disabled:text-slate-300 disabled:italic
+                    ${language === "IV" ? "bg-zinc-900 font-bold" : "bg-zinc-900 font-normal"}
                     `} 
                     disabled={irishDisabled}>
                     Irish

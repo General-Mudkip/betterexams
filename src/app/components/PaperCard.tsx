@@ -43,10 +43,10 @@ function PaperCard({type, subject, paperName, year, url}: PaperCardProps) {
             <div 
             className={
                 `
-                w-96 h-36 border-2 border-white border-l-8 p-3 rounded-lg text-white flex flex-col justify-between group
+                w-96 h-36 border-l-8 p-3 rounded-lg text-white flex flex-col justify-between group bg-zinc-900
                 ${determineCardColour(type)}
                 transform transition-all duration-[350ms] ease-in-out
-                hover:scale-105 hover:bg-[#595959] hover:border-[#595959] hover:shadow-lg
+                hover:scale-105 hover:bg-[#595959] hover:shadow-lg
                 `
             }>
                 <div> 
