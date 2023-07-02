@@ -1,7 +1,7 @@
 'use client'
 import { useState, ChangeEvent, useEffect } from 'react';
 import PaperGrid from './PaperGrid';
-import { Listbox, Transition } from '@headlessui/react';
+import { Combobox, Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 
 // INITIALISATION
@@ -20,17 +20,14 @@ function ChoicesForm() {
     const [englishDisabled, setEnglishDisabled] = useState<boolean>(false);
     const [irishDisabled, setIrishDisabled] = useState<boolean>(true);
 
-    const[higherDisabled, setHigherDisabled] = useState<boolean>(false);
-    const[ordinaryDisabled, setOrdinaryDisabled] = useState<boolean>(false);
-    const[foundationDisabled, setFoundationDisabled] = useState<boolean>(false);
-    const[commonDisabled, setCommonDisabled] = useState<boolean>(false);
-
     const [examList, setExamList] = useState<string[][]>([]);
+    const [query, setQuery] = useState('')
 
     let tempExamList:string[][]; // To be used because of useState's asynchronity
     let currentLevel: string = "Higher";
 
     let tempSubject:string = subject;
+    let tempYear:string = year;
 
     let tempHigherDisabled: boolean = false;
     let tempOrdinaryDisabled: boolean = false;
@@ -98,44 +95,6 @@ function ChoicesForm() {
         setExamList(tempExamList); // Sets the exam list to the newly generated list
     }
 
-    const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-        const name = event.target.name;
-        const value = event.target.value;
-
-        // Update the corresponding state hook based on the name
-        switch (name) {
-            case 'certificate':
-                setCertificate(value);
-                setSubject(Object.keys(subNumsToNames)[0]); // Reset the subject to the first available option
-                // Call subjectChoiceLoad to update the subject options
-                break;
-            case 'subject':
-                setSubject(value);
-
-                tempSubject = value;
-
-                // Check if the selected year is valid for the new subject
-                if (!data[certificate][value].hasOwnProperty(year)) {
-                    // If the selected year is invalid, update the year state
-                    setYear(Object.keys(data[certificate][value])[0]);
-                }
-
-                handleLevelChange(currentLevel)
-                break;
-            case 'year':
-                setYear(value);
-                break;
-            case 'language':
-                setLanguage(value);
-                break;
-            case 'level':
-                setLevel(value);
-                break;
-            default:
-                break;
-        }
-    };
-
     const handleLevelChange = (value: string) => {
         currentLevel = value;
         determineLevelAvailability();
@@ -159,23 +118,27 @@ function ChoicesForm() {
 
     function determineLanguageAvailability() { // I promise this is the best way to do this
 
-        const exampapers = data[certificate][subject][year]["exampapers"];
-        setEnglishDisabled(true);
-        setIrishDisabled(true);
-
-        for (const doc of exampapers) {
-            const docName = doc.details;
-            if (docName.includes("EV")) {
-                setEnglishDisabled(false);
+        try {
+            const exampapers = data[certificate][subject][year]["exampapers"];
+            setEnglishDisabled(true);
+            setIrishDisabled(true);
+    
+            for (const doc of exampapers) {
+                const docName = doc.details;
+                if (docName.includes("EV")) {
+                    setEnglishDisabled(false);
+                }
+                if (docName.includes("IV")) {
+                    setIrishDisabled(false);
+                }
             }
-            if (docName.includes("IV")) {
-                setIrishDisabled(false);
-            }
+        } catch(error) {
+            console.log(error)
         }
     }
 
     function determineLevelAvailability() {
-        const exampapers = data[certificate][tempSubject][year]["exampapers"];
+        const exampapers = data[certificate][tempSubject][tempYear]["exampapers"];
 
         tempHigherDisabled = true;
         tempOrdinaryDisabled = true;
@@ -201,29 +164,52 @@ function ChoicesForm() {
         }
     }
 
-    // Loads the subject choices from the data file dependent on what subject is selected
-    function subjectChoiceLoad() {
-        return Object.entries(subNumsToNames).map(([id]) => {
-            if (data[certificate].hasOwnProperty(id)) {
-            return (
-                <option key={id} value={id}>
-                {subNumsToNames[id]}
-                </option>
-            );
-            } else {
-            return null; // Skip rendering the option if the ID doesn't exist in data["lc"]
+    function handleYearChange(val: string) {
+        tempYear = val;
+        setYear(tempYear);
+        
+    }
+
+    function handleCertChange(val: string) {
+        setCertificate(val);
+        setSubject(Object.keys(subNumsToNames)[0]); // Reset the subject to the first available option
+        setYear(Object.keys(data[val][Object.keys(subNumsToNames)[0]])[0]); // Reset the year to the first available option
+    }
+
+    function handleSubjectChange(val: string) {
+        setSubject(val);
+
+        tempSubject = val;
+
+        console.log((!data[certificate][val].hasOwnProperty(year)))
+
+        // Check if the selected year is valid for the new subject
+        if (!data[certificate][val].hasOwnProperty(year)) {
+            // If the selected year is invalid, update the year state
+            const lastKey = Object.keys(data[certificate][val]).at(-1);
+            console.log(lastKey)
+            if (lastKey) {
+                setYear(lastKey);
             }
-        });
+        }
     }
 
     // Loads the year choices dependent on what subject is selected
     function yearChoiceLoad() {
-        return Object.entries(data[certificate][subject]).map(([year]) => {
-            if (data[certificate][subject].hasOwnProperty(year)) {
+        return Object.entries(data[certificate][subject]).map(([yeare]) => {
+            if (data[certificate][subject].hasOwnProperty(yeare)) {
                 return (
-                    <option key={year} value={year}>
-                    {year}
-                    </option>
+                    <Listbox.Option  value={yeare} className={
+                        `top-0 h-full relative pl-10 ui-selected:bg-gray-700 py-[0.3rem] pt-[0.5rem]
+                        ui-active:bg-zinc-800 ui-not-active:bg-black`
+                        }>
+                            <span className="block truncate font-normal ui-selected:font-medium">
+                                {yeare}
+                            </span>
+                            <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
+                                <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                            </span>
+                     </Listbox.Option>
                 );
             } else {
                 return null;
@@ -231,27 +217,146 @@ function ChoicesForm() {
         }).reverse();
     }
 
+
+    const uniqueSubNumsToNames: Record<string, string> = {};
+    Object.entries(subNumsToNames).forEach(([id, subjectName]) => {
+      if (!Object.values(uniqueSubNumsToNames).includes(subjectName as string) && data[certificate].hasOwnProperty(id)) {
+        uniqueSubNumsToNames[id] = subjectName as string;
+      }
+    });
+    
+    const filteredSubjects =
+      query === ''
+        ? Object.values(uniqueSubNumsToNames)
+        : Object.values(uniqueSubNumsToNames).filter((subjectName) =>
+            (subjectName as string).toLowerCase().includes(query.toLowerCase())
+    );
+
     return (
         <>
             <form className='flex flex-row flex-wrap gap-3 justify-center hover:cursor-pointer'>
-                <select name="certificate" value={certificate} onChange={handleChange}
-                    className=""
-                >
-                    <option value="lc">Leaving Certificate</option>
-                    <option value="jc">Junior Certificate</option>
-                </select>
 
-                <select name="subject" value={subject} onChange={handleChange}>
-                    {subjectChoiceLoad()}
-                </select>
+                <div className="w-52">
+                    <Listbox name="cert" value={certificate} onChange={handleCertChange}>
+                        <div className="relative">
+                            <Listbox.Button className="text-white text-left bg-zinc-900 border-2 border-spacing-2 border-white w-full rounded-md p-3 hover:border-slate-400 transition-all duration-200">
+                                {(certificate === "lc" ? "Leaving Certificate" : "Junior Certificate")}
+                                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                    <ChevronUpDownIcon
+                                        className="h-5 w-5 text-gray-400"
+                                        aria-hidden="true"
+                                    />
+                                </span>
+                            </Listbox.Button>
 
-                <select name="year" value={year} onChange={handleChange}>
-                    {yearChoiceLoad()}
-                </select>
+                            <Listbox.Options className="absolute mt-2 z-50 w-full max-h-60 overflow-auto rounded-md bg-gray-950 border-2 border-white text-white">
+                                <Listbox.Option value="lc" className={
+                                        `top-0 h-full relative pl-10 ui-selected:bg-gray-700 py-[0.3rem]
+                                        ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100`
+                                        }>
+
+                                        <>
+                                            <span className="block truncate font-normal ui-selected:font-medium">
+                                                Leaving Certificate
+                                            </span>
+                                            <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
+                                                <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                            </span>
+                                        </>
+                                </Listbox.Option>
+
+                                <Listbox.Option value="jc" className={
+                                    `top-0 h-full relative pl-10 ui-selected:bg-gray-700 py-[0.3rem]
+                                    ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100`
+                                    }>
+
+                                    <>
+                                        <span className="block truncate font-normal ui-selected:font-medium">
+                                            Junior Certificate
+                                        </span>
+                                        <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
+                                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                        </span>
+                                    </>
+                                </Listbox.Option>
+                            </Listbox.Options>
+                        </div>
+                        
+                        
+                    </Listbox>
+                </div>
+                
+                <div className="w-80">
+                    <Combobox name="subject" value={subject} onChange={handleSubjectChange}>
+                        <div className="relative h-full">
+                            <div className="relative h-full w-full cursor-pointer overflow-hidden rounded-lg text-left border-2 border-white">
+                                <Combobox.Input
+                                    className="w-full h-full border-none pl-3 pr-10 leading-5 bg-zinc-900 text-white focus:ring-0"
+                                    displayValue={() => subNumsToNames[subject]}
+                                    onChange={(event) => setQuery(event.target.value)}
+                                />
+                                <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+                                    <ChevronUpDownIcon
+                                        className="h-5 w-5 text-gray-400"
+                                        aria-hidden="true"
+                                    />
+                                </Combobox.Button>
+                            </div>
+
+                            <Combobox.Options className="absolute mt-2 z-50 py-2 w-full max-h-60 overflow-auto rounded-md bg-gray-950 border-2 border-white text-white">
+                            {filteredSubjects.length === 0 && query !== "" ? (
+                                <div className="relative cursor-default select-none py-2 px-4 text-white">
+                                No subjects found.
+                                </div>
+                            ) : (
+                                filteredSubjects.map((subjectName) => {
+                                    const subjectId = Object.keys(subNumsToNames).find(
+                                        (id) => subNumsToNames[id] === subjectName
+                                    );
+
+                                    if (subjectId) {
+                                        return (
+                                            <Combobox.Option
+                                                key={subjectId}
+                                                value={subjectId}
+                                                className="top-0 h-full relative pl-10 ui-selected:bg-gray-700 py-2 ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100"
+                                            >
+                                                {subjectName}
+                                            </Combobox.Option>
+                                        );
+                                    }
+                                  })
+                            )}
+                            </Combobox.Options>
+                        </div>
+                    </Combobox>
+                </div>
+                
+
+                <div className="w-32">
+                    <Listbox name="year" value={year} onChange={handleYearChange}>
+                        <div className="relative">
+                            <Listbox.Button className="text-white text-left bg-zinc-900 border-2 border-spacing-2 border-white w-full rounded-md p-3 hover:border-slate-400 transition-all duration-200">
+                                {year}
+                                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                    <ChevronUpDownIcon
+                                        className="h-5 w-5 text-gray-400"
+                                        aria-hidden="true"
+                                    />
+                                </span>
+                            </Listbox.Button>
+
+                            <Listbox.Options className="absolute mt-2 z-50 w-full max-h-60 overflow-auto rounded-md bg-gray-950 border-2 border-white text-white">
+                                {yearChoiceLoad()}
+                            </Listbox.Options>
+                        </div>
+                        
+                        
+                    </Listbox>
+                </div>
 
                 <div className='w-40'>
                     
-                    {/* TODO: Commit a cardinal sin and make these classes. */}
                     <Listbox name="level" defaultValue={level} onChange={handleLevelChange}>
                         <div className="relative">
                             <Listbox.Button className="text-white text-left bg-zinc-900 border-2 border-spacing-2 border-white w-full rounded-md p-3 hover:border-slate-400 transition-all duration-200">
