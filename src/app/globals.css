@@ -26,21 +26,7 @@ body {
     rgb(var(--background-start-rgb));
 }
 
-select {
-  @apply text-white bg-transparent border-2 border-spacing-2 mx-1 rounded-md p-3 bg-zinc-900
-  transition-all duration-200
-  hover:cursor-pointer hover:border-gray-400 hover:bg-zinc-800 hover:shadow-md;
-}
-
-option {
-  @apply text-black font-sans hover:cursor-pointer;
-}
-
 button {
   @apply transition-all duration-200 bg-zinc-900
   hover:border-gray-300 enabled:hover:bg-zinc-800;
-}
-
-.listbox-style {
-  @apply text-white bg-transparent border-2 border-spacing-2 mx-1 rounded-md p-3;
 }
