@@ -1,8 +1,9 @@
 'use client'
-import { useState, ChangeEvent, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import PaperGrid from './PaperGrid';
 import { Combobox, Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
+import { motion } from "framer-motion"
 
 // INITIALISATION
 var data = require('../files/data.json');
@@ -349,10 +350,17 @@ function ChoicesForm() {
                                     />
                                 </span>
                             </Listbox.Button>
+                            
+                            <motion.div 
+                                className='absolute w-full z-50'
+                            >     
+                                <Listbox.Options className="relative mt-2 border-2 max-h-64 border-white z-50 w-full overflow-auto rounded-md bg-gray-950 text-white">
+                                    {yearChoiceLoad()}
+                                </Listbox.Options>
+                            </motion.div>
 
-                            <Listbox.Options className="absolute mt-2 z-50 w-full max-h-60 overflow-auto rounded-md bg-gray-950 border-2 border-white text-white">
-                                {yearChoiceLoad()}
-                            </Listbox.Options>
+
+                            
                         </div>
                         
                         
