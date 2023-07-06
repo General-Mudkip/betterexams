@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react';
 import PaperGrid from './PaperGrid';
-import { Combobox, Listbox, Transition } from '@headlessui/react';
+import { Combobox, Listbox } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { AnimatePresence, motion } from "framer-motion"
 

@@ -1,3 +1,6 @@
+import { AnimatePresence, motion } from "framer-motion"
+
+
 interface PaperCardProps {
     type: string;
     subject: string;
@@ -39,30 +42,37 @@ function PaperCard({type, subject, paperName, year, url}: PaperCardProps) {
     }
 
     return(
-        <a href={url} target="_blank">
-            <div 
-            className={
-                `
-                w-96 h-36 border-l-8 p-3 rounded-lg text-white flex flex-col justify-between group bg-zinc-900
-                ${determineCardColour(type)}
-                transform transition-all duration-[350ms] ease-in-out
-                hover:scale-105 hover:bg-[#595959] hover:shadow-lg
-                `
-            }>
-                <div> 
-                    <h3 className="italic">
-                    {determineCategoryName(type)} • {subject} {/*  TODO: Add a language */}
-                    </h3>
-                    <h1 className="text-2xl font-bold mt-1">{paperName}</h1>
-                </div>
+        <AnimatePresence>
+            <motion.div
+                initial={{ opacity: 0.7, y: 35 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, type: "spring", bounce: 0.35 }}
+            >
+                <a href={url} target="_blank">
+                    <div 
+                    className={
+                        `
+                        w-96 h-36 border-l-8 p-3 rounded-lg text-white flex flex-col justify-between group bg-zinc-900
+                        ${determineCardColour(type)} overflow-auto
+                        transform transition-all duration-[350ms] ease-in-out
+                        hover:scale-105 hover:bg-[#595959] hover:shadow-lg
+                        `
+                    }>
+                        <div> 
+                            <h3 className="italic">
+                            {determineCategoryName(type)} • {subject} {/*  TODO: Add a language */}
+                            </h3>
+                            <h1 className="text-2xl font-bold mt-1">{paperName}</h1>
+                        </div>
 
-                <div>
-                    <p className="font-mono italic text-slate-300 self-end">{year}</p>
-                </div>
+                        <div>
+                            <p className="font-mono italic text-slate-300 self-end">{year}</p>
+                        </div>
 
-            </div>
-        </a>
-        
+                    </div>
+                </a>
+            </motion.div>
+        </AnimatePresence>
     )
 }
 
