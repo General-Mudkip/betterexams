@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import PaperGrid from './PaperGrid';
 import { Combobox, Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 
 // INITIALISATION
 var data = require('../files/data.json');
@@ -23,6 +23,8 @@ function ChoicesForm() {
 
     const [examList, setExamList] = useState<string[][]>([]);
     const [query, setQuery] = useState('')
+
+    const [showYearDropdown, setShowYearDropdown] = useState(false);
 
     let tempExamList:string[][]; // To be used because of useState's asynchronity
     let currentLevel: string = "Higher";
@@ -205,7 +207,7 @@ function ChoicesForm() {
             if (data[certificate][subject].hasOwnProperty(yeare)) {
                 return (
                     <Listbox.Option key={yeare} value={yeare} className={
-                        `top-0 h-full relative pl-10 ui-selected:bg-gray-700 py-[0.3rem] pt-[0.5rem]
+                        `top-0 relative pl-10 ui-selected:bg-gray-700 py-[0.3rem] pt-[0.5rem]
                         ui-active:bg-zinc-800 ui-not-active:bg-black`
                         }>
                             <span className="block truncate font-normal ui-selected:font-medium">
@@ -340,6 +342,7 @@ function ChoicesForm() {
 
                 <div className="w-32">
                     <Listbox name="year" value={year} onChange={handleYearChange}>
+                        {({ open }) => (
                         <div className="relative">
                             <Listbox.Button className="text-white text-left bg-zinc-900 border-2 border-spacing-2 border-white w-full rounded-md p-3 hover:border-slate-400 transition-all duration-200">
                                 {year}
@@ -351,19 +354,24 @@ function ChoicesForm() {
                                 </span>
                             </Listbox.Button>
                             
-                            <motion.div 
-                                className='absolute w-full z-50'
-                            >     
-                                <Listbox.Options className="relative mt-2 border-2 max-h-64 border-white z-50 w-full overflow-auto rounded-md bg-gray-950 text-white">
-                                    {yearChoiceLoad()}
-                                </Listbox.Options>
-                            </motion.div>
-
-
-                            
+                            <AnimatePresence>
+                                { open && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        transition={{ duration: 0.1 }}
+                                        className="absolute w-full z-50"
+                                    >
+                                        <Listbox.Options static className="max-h-64 mt-2 border-2 h-full border-white overflow-auto z-50 w-full rounded-md bg-gray-950 text-white">
+                                            {yearChoiceLoad()}
+                                        </Listbox.Options>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
                         
-                        
+                        )}
                     </Listbox>
                 </div>
 
