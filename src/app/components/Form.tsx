@@ -245,6 +245,7 @@ function ChoicesForm() {
 
                 <div className="w-52">
                     <Listbox name="cert" value={certificate} onChange={handleCertChange}>
+                        {({ open }) => (
                         <div className="relative">
                             <Listbox.Button className="text-white text-left bg-zinc-900 border-2 border-spacing-2 border-white w-full rounded-md p-3 hover:border-slate-400 transition-all duration-200">
                                 {(certificate === "lc" ? "Leaving Certificate" : "Junior Certificate")}
@@ -256,86 +257,113 @@ function ChoicesForm() {
                                 </span>
                             </Listbox.Button>
 
-                            <Listbox.Options className="absolute mt-2 z-50 w-full max-h-60 overflow-auto rounded-md bg-gray-950 border-2 border-white text-white">
-                                <Listbox.Option value="lc" className={
-                                        `top-0 h-full relative pl-10 ui-selected:bg-gray-700 py-[0.3rem]
-                                        ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100`
-                                        }>
+                            <AnimatePresence>
+                                { open && (
+                                    <motion.div
+                                        initial={{ height: 0 }}
+                                        animate={{ height:"auto" }}
+                                        exit={{ height: 0 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="absolute w-full z-50"
+                                    >
+                                        <Listbox.Options static className="mt-2 z-50 h-full overflow-auto rounded-md bg-gray-950 border-2 border-white text-white">
+                                            <Listbox.Option value="lc" className={
+                                                    `top-0 relative pl-10 ui-selected:bg-gray-700 py-[0.3rem]
+                                                    ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100`
+                                                    }>
 
-                                        <>
-                                            <span className="block truncate font-normal ui-selected:font-medium">
-                                                Leaving Certificate
-                                            </span>
-                                            <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
-                                                <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                                            </span>
-                                        </>
-                                </Listbox.Option>
+                                                    <>
+                                                        <span className="block truncate font-normal ui-selected:font-medium">
+                                                            Leaving Certificate
+                                                        </span>
+                                                        <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
+                                                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                                        </span>
+                                                    </>
+                                            </Listbox.Option>
 
-                                <Listbox.Option value="jc" className={
-                                    `top-0 h-full relative pl-10 ui-selected:bg-gray-700 py-[0.3rem]
-                                    ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100`
-                                    }>
+                                            <Listbox.Option value="jc" className={
+                                                `top-0 relative pl-10 ui-selected:bg-gray-700 py-[0.3rem]
+                                                ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100`
+                                                }>
 
-                                    <>
-                                        <span className="block truncate font-normal ui-selected:font-medium">
-                                            Junior Certificate
-                                        </span>
-                                        <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
-                                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                                        </span>
-                                    </>
-                                </Listbox.Option>
-                            </Listbox.Options>
+                                                <>
+                                                    <span className="block truncate font-normal ui-selected:font-medium">
+                                                        Junior Certificate
+                                                    </span>
+                                                    <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
+                                                        <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                                    </span>
+                                                </>
+                                            </Listbox.Option>
+                                        </Listbox.Options>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+
                         </div>
                         
-                        
+                        )}
                     </Listbox>
                 </div>
                 
                 <div className="w-80">
                     <Combobox name="subject" value={subject} onChange={handleSubjectChange}>
-                        <div className="relative h-full">
-                            <div className="relative h-full w-full cursor-pointer overflow-hidden rounded-lg text-left border-2 border-white">
-                                <Combobox.Input
-                                    className="w-full h-full border-none pl-3 pr-10 leading-5 bg-zinc-900 text-white focus:ring-0"
-                                    displayValue={() => subNumsToNames[subject]}
-                                    onChange={(event) => setQuery(event.target.value)}
-                                />
-                                <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                                    <ChevronUpDownIcon
-                                        className="h-5 w-5 text-gray-400"
-                                        aria-hidden="true"
+                        {({ open }) => (
+                            <div className="relative h-full">
+                                <div className="relative h-full w-full cursor-pointer overflow-hidden rounded-lg text-left border-2 border-white">
+                                    <Combobox.Input
+                                        className="w-full h-full border-none pl-3 pr-10 leading-5 bg-zinc-900 text-white focus:ring-0"
+                                        displayValue={() => subNumsToNames[subject]}
+                                        onChange={(event) => setQuery(event.target.value)}
                                     />
-                                </Combobox.Button>
-                            </div>
-
-                            <Combobox.Options className="absolute mt-2 z-50 py-2 w-full max-h-60 overflow-auto rounded-md bg-gray-950 border-2 border-white text-white">
-                            {filteredSubjects.length === 0 && query !== "" ? (
-                                <div className="relative cursor-default select-none py-2 px-4 text-white">
-                                No subjects found.
+                                    <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+                                        <ChevronUpDownIcon
+                                            className="h-5 w-5 text-gray-400"
+                                            aria-hidden="true"
+                                        />
+                                    </Combobox.Button>
                                 </div>
-                            ) : (
-                                filteredSubjects.map((subjectName) => {
-                                    const subjectId = Object.keys(subNumsToNames).find(
-                                        (id) => subNumsToNames[id] === subjectName
-                                    );
 
-                                    if (subjectId) {
-                                        return (
-                                            <Combobox.Option
-                                                key={subjectId}
-                                                value={subjectId}
-                                                className="top-0 h-full relative pl-10 ui-selected:bg-gray-700 py-2 ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100"
-                                            >
-                                                {subjectName}
-                                            </Combobox.Option>
-                                        );
-                                    }
-                                  })
-                            )}
-                            </Combobox.Options>
-                        </div>
+                                <AnimatePresence>
+                                    {open && (
+                                        <motion.div
+                                            initial={{ height: 0 }}
+                                            animate={{ height:"auto" }}
+                                            exit={{ height: 0 }}
+                                            transition={{ duration: 0.2 }}
+                                            className="absolute w-full z-50"
+                                        >
+                                            <Combobox.Options static className="mt-2 z-50 py-2 w-full h-full max-h-72 overflow-auto rounded-md bg-gray-950 border-2 border-white text-white">
+                                                {filteredSubjects.length === 0 && query !== "" ? (
+                                                    <div className="relative cursor-default select-none py-2 px-4 text-white">
+                                                    No subjects found.
+                                                    </div>
+                                                ) : (
+                                                    filteredSubjects.map((subjectName) => {
+                                                        const subjectId = Object.keys(subNumsToNames).find(
+                                                            (id) => subNumsToNames[id] === subjectName
+                                                        );
+
+                                                        if (subjectId) {
+                                                            return (
+                                                                <Combobox.Option
+                                                                    key={subjectId}
+                                                                    value={subjectId}
+                                                                    className="top-0 relative pl-10 ui-selected:bg-gray-700 py-2 ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100"
+                                                                >
+                                                                    {subjectName}
+                                                                </Combobox.Option>
+                                                            );
+                                                        }
+                                                    })
+                                                )}
+                                            </Combobox.Options>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                        )}
                     </Combobox>
                 </div>
                 
@@ -357,10 +385,10 @@ function ChoicesForm() {
                             <AnimatePresence>
                                 { open && (
                                     <motion.div
-                                        initial={{ opacity: 0, y: -10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -10 }}
-                                        transition={{ duration: 0.1 }}
+                                        initial={{ height: 0 }}
+                                        animate={{ height:"16rem" }}
+                                        exit={{ height: 0 }}
+                                        transition={{ duration: 0.2 }}
                                         className="absolute w-full z-50"
                                     >
                                         <Listbox.Options static className="max-h-64 mt-2 border-2 h-full border-white overflow-auto z-50 w-full rounded-md bg-gray-950 text-white">
@@ -378,81 +406,95 @@ function ChoicesForm() {
                 <div className='w-40'>
                     
                     <Listbox name="level" defaultValue={level} onChange={handleLevelChange}>
-                        <div className="relative">
-                            <Listbox.Button className="text-white text-left bg-zinc-900 border-2 border-spacing-2 border-white w-full rounded-md p-3 hover:border-slate-400 transition-all duration-200">
-                                {level}
-                                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                                    <ChevronUpDownIcon
-                                        className="h-5 w-5 text-gray-400"
-                                        aria-hidden="true"
-                                    />
-                                </span>
-                            </Listbox.Button>
-                            
-                            <Listbox.Options className="absolute mt-2 z-50 w-full max-h-60 overflow-auto rounded-md bg-gray-950 border-2 border-white">
-                                <Listbox.Option  value="Higher" disabled={tempHigherDisabled} className={
-                                    `top-0 h-full relative pl-10 ui-selected:bg-gray-700 py-[0.3rem] pt-[0.5rem]
-                                    ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100
-                                    ${tempHigherDisabled ? "text-red-500 !bg-red-950/70 italic line-through" : "text-white"}`
-                                    }>
-                                        
-                                    <>
-                                        <span className="block truncate font-normal ui-selected:font-medium">
-                                            Higher
-                                        </span>
-                                        <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
-                                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                                        </span>
-                                    </>
-                                 </Listbox.Option>
+                        {({ open }) => (
+                            <div className="relative">
+                                <Listbox.Button className="text-white text-left bg-zinc-900 border-2 border-spacing-2 border-white w-full rounded-md p-3 hover:border-slate-400 transition-all duration-200">
+                                    {level}
+                                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                        <ChevronUpDownIcon
+                                            className="h-5 w-5 text-gray-400"
+                                            aria-hidden="true"
+                                        />
+                                    </span>
+                                </Listbox.Button>
+                                
+                                <AnimatePresence>
+                                    { open && (
+                                        <motion.div
+                                            initial={{ height: 0 }}
+                                            animate={{ height:"auto" }}
+                                            exit={{ height: 0 }}
+                                            transition={{ duration: 0.2 }}
+                                            className="absolute w-full z-50"
+                                        >
+                                            <Listbox.Options static className="mt-2 h-full overflow-y-auto rounded-md bg-gray-950 border-2 border-white">
+                                                <Listbox.Option  value="Higher" disabled={tempHigherDisabled} className={
+                                                    `top-0 relative pl-10 ui-selected:bg-gray-700 py-[0.3rem] pt-[0.5rem]
+                                                    ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100
+                                                    ${tempHigherDisabled ? "text-red-500 !bg-red-950/70 italic line-through" : "text-white"}`
+                                                    }>
+                                                        
+                                                    <>
+                                                        <span className="block truncate font-normal ui-selected:font-medium">
+                                                            Higher
+                                                        </span>
+                                                        <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
+                                                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                                        </span>
+                                                    </>
+                                                </Listbox.Option>
 
-                                 <Listbox.Option value="Ordinary" disabled={tempOrdinaryDisabled} className={
-                                    `top-0 h-full relative pl-10 ui-selected:bg-gray-700 py-[0.3rem]
-                                    ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100
-                                    ${tempOrdinaryDisabled ? "text-red-500 !bg-red-950/70 italic line-through" : "text-white"}`
-                                    }>
+                                                <Listbox.Option value="Ordinary" disabled={tempOrdinaryDisabled} className={
+                                                    `top-0 relative pl-10 ui-selected:bg-gray-700 py-[0.3rem]
+                                                    ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100
+                                                    ${tempOrdinaryDisabled ? "text-red-500 !bg-red-950/70 italic line-through" : "text-white"}`
+                                                    }>
 
-                                    <>
-                                        <span className="block truncate font-normal ui-selected:font-medium">
-                                            Ordinary
-                                        </span>
-                                        <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
-                                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                                        </span>
-                                    </>
-                                 </Listbox.Option>
+                                                    <>
+                                                        <span className="block truncate font-normal ui-selected:font-medium">
+                                                            Ordinary
+                                                        </span>
+                                                        <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
+                                                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                                        </span>
+                                                    </>
+                                                </Listbox.Option>
 
-                                 <Listbox.Option value="Foundation" disabled={tempFoundationDisabled} className={
-                                    `top-0 h-full relative pl-10 ui-selected:bg-gray-700 py-[0.3rem]
-                                    ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100
-                                    ${tempFoundationDisabled ? "text-red-500 !bg-red-950/70 italic line-through" : "text-white"}`
-                                    }>
-                                    <>
-                                        <span className="block truncate font-normal ui-selected:font-medium">
-                                            Foundation
-                                        </span>
-                                        <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
-                                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                                        </span>
-                                    </>
-                                 </Listbox.Option>
+                                                <Listbox.Option value="Foundation" disabled={tempFoundationDisabled} className={
+                                                    `top-0 relative pl-10 ui-selected:bg-gray-700 py-[0.3rem]
+                                                    ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100
+                                                    ${tempFoundationDisabled ? "text-red-500 !bg-red-950/70 italic line-through" : "text-white"}`
+                                                    }>
+                                                    <>
+                                                        <span className="block truncate font-normal ui-selected:font-medium">
+                                                            Foundation
+                                                        </span>
+                                                        <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
+                                                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                                        </span>
+                                                    </>
+                                                </Listbox.Option>
 
-                                 <Listbox.Option value="Common" disabled={tempCommonDisabled} className={
-                                    `top-0 h-full relative pl-10 ui-selected:bg-gray-700 py-[0.3rem] pb-[0.6rem]
-                                    ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100
-                                    ${tempCommonDisabled ? "text-red-500 !bg-red-950/70 italic line-through" : "text-white"}`
-                                    }>
-                                    <>
-                                        <span className="block truncate font-normal ui-selected:font-medium">
-                                            Common
-                                        </span>
-                                        <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
-                                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                                        </span>
-                                    </>
-                                 </Listbox.Option>
-                            </Listbox.Options>
-                        </div>
+                                                <Listbox.Option value="Common" disabled={tempCommonDisabled} className={
+                                                    `top-0 relative pl-10 ui-selected:bg-gray-700 py-[0.3rem] pb-[0.6rem]
+                                                    ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100
+                                                    ${tempCommonDisabled ? "text-red-500 !bg-red-950/70 italic line-through" : "text-white"}`
+                                                    }>
+                                                    <>
+                                                        <span className="block truncate font-normal ui-selected:font-medium">
+                                                            Common
+                                                        </span>
+                                                        <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
+                                                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                                        </span>
+                                                    </>
+                                                </Listbox.Option>
+                                            </Listbox.Options>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                        )}
                     </Listbox>
                 </div>
 
