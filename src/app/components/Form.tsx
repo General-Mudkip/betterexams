@@ -14,8 +14,8 @@ const url: string = "https://www.examinations.ie/archive";
 
 function ChoicesForm() {
     const [certificate, setCertificate] = useState<string>('lc');
-    const [subject, setSubject] = useState<string>('2');
-    const [year, setYear] = useState<string>('2019');
+    const [subject, setSubject] = useState<string>('3');
+    const [year, setYear] = useState<string>('2022');
     const [language, setLanguage] = useState<string>('EV');
     const [level, setLevel] = useState<string>('Higher');
 
