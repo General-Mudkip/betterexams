@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import { useState, useEffect } from 'react';
 import PaperGrid from './PaperGrid';
@@ -241,9 +242,9 @@ function ChoicesForm() {
 
     return (
         <>
-            <form className='flex flex-row flex-wrap gap-3 justify-center hover:cursor-pointer'>
+            <form className='flex flex-row flex-wrap gap-3 w-auto justify-center hover:cursor-pointer'>
 
-                <div className="w-52">
+                <div className="w-80 justify-center sm:w-full sm:max-w-[460px] lg:w-56">
                     <Listbox name="cert" value={certificate} onChange={handleCertChange}>
                         {({ open }) => (
                         <div className="relative">
@@ -310,8 +311,8 @@ function ChoicesForm() {
                 <div className="w-80">
                     <Combobox name="subject" value={subject} onChange={handleSubjectChange}>
                         {({ open }) => (
-                            <div className="relative h-full">
-                                <div className="relative h-full w-full cursor-pointer overflow-hidden rounded-lg text-left border-2 border-white">
+                            <div className="relative h-[52px]">
+                                <div className="relative h-full w-full cursor-pointer overflow-hidden rounded-md text-left border-2 border-white">
                                     <Combobox.Input
                                         className="w-full h-full border-none pl-3 pr-10 leading-5 bg-zinc-900 text-white focus:ring-0"
                                         displayValue={() => subNumsToNames[subject]}
