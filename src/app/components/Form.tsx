@@ -318,7 +318,7 @@ function ChoicesForm() {
                                         displayValue={() => subNumsToNames[subject]}
                                         onChange={(event) => setQuery(event.target.value)}
                                     />
-                                    <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+                                    <Combobox.Button className="absolute inset-y-0 right-0 flex items-center px-2">
                                         <ChevronUpDownIcon
                                             className="h-5 w-5 text-gray-400"
                                             aria-hidden="true"
