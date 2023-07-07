@@ -3,7 +3,7 @@ import { atom, useAtom } from "jotai";
 import { AnimatePresence, motion } from "framer-motion";
 
 let aboutIsOpenAtom = atom(false);
-let contactIsOpenAtom = atom(true);
+let contactIsOpenAtom = atom(false);
 
 const WEBHOOK_URL:string = "https://webhook.site/38b5a909-1a34-4ad4-80b9-90c9b71fe573";
 
@@ -77,7 +77,7 @@ function Footer() {
             ).then(() => {
                 alert("Message sent!");
             }).catch(error => {
-                alert("Message failed to send! Please try again later.");
+                alert("Message failed to send! Feel free to email me at generalmudkipp@gmail.com");
                 console.error(error);
             });
         }
