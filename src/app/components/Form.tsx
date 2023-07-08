@@ -25,8 +25,6 @@ function ChoicesForm() {
     const [examList, setExamList] = useState<string[][]>([]);
     const [query, setQuery] = useState('')
 
-    const [showYearDropdown, setShowYearDropdown] = useState(false);
-
     let tempExamList:string[][]; // To be used because of useState's asynchronity
     let currentLevel: string = "Higher";
 

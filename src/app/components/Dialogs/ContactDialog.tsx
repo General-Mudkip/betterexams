@@ -3,7 +3,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useAtom } from "jotai";
 import { contactIsOpenAtom } from "../Footer";
 
-const WEBHOOK_URL:string = "https://webhook.site/38b5a909-1a34-4ad4-80b9-90c9b71fe573";
+const WEBHOOK_URL:string = "https://discord.com/api/webhooks/1126870227297255496/Rs5vAbLZ8MbBj0Sz8vYApJuVMh4HhtEXGHEN8yZ73I3Oj9ITubW58o8X1Rxm6h81uF5r";
+const MY_ID:string = "567665494518267904"
 
 function ContactDialog() {
     let [contactIsOpen, setContactIsOpen] = useAtom(contactIsOpenAtom);
@@ -11,7 +12,7 @@ function ContactDialog() {
     function sendMessageToDiscord(name: string, email: string, message: string) {
         const payload = {
             username: "Exam Help Bot",
-            content: `**Name:** ${name}\n**Email:** ${email}\n**Message:** ${message}`,
+            content: `<@${MY_ID}>\n**Name:** ${name}\n**Email:** ${email}\n**Message:** ${message}`,
         };
 
         fetch(WEBHOOK_URL, {
@@ -22,9 +23,10 @@ function ContactDialog() {
             body: JSON.stringify(payload),    
         }
         ).then(() => {
-            alert("Message sent!");
+            alert("Message sent! I'll try and get back to you soon.");
+            setContactIsOpen(false);
         }).catch(error => {
-            alert("Message failed to send! Feel free to email me at generalmudkipp@gmail.com");
+            alert("Message failed to send! Feel free to email me at bence@mudkip.live");
             console.error(error);
         });
     }
