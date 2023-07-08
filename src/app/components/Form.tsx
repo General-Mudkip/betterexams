@@ -307,7 +307,7 @@ function ChoicesForm() {
                 </div>
                 
                 <div className="w-80">
-                    <Combobox name="subject" value={subject} onChange={handleSubjectChange}>
+                    <Combobox name="subject" value={subject} onChange={handleSubjectChange} aria-label="subjects">
                         {({ open }) => (
                             <div className="relative h-[52px]">
                                 <div className="relative h-full w-full cursor-pointer overflow-hidden rounded-md text-left border-2 border-white">
@@ -316,7 +316,7 @@ function ChoicesForm() {
                                         displayValue={() => subNumsToNames[subject]}
                                         onChange={(event) => setQuery(event.target.value)}
                                     />
-                                    <Combobox.Button className="absolute inset-y-0 right-0 flex items-center px-2">
+                                    <Combobox.Button className="absolute inset-y-0 right-0 flex items-center px-2" aria-label="expand subjects">
                                         <ChevronUpDownIcon
                                             className="h-5 w-5 text-gray-400"
                                             aria-hidden="true"
