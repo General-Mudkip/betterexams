@@ -68,7 +68,7 @@ function ContactDialog() {
                             <Dialog.Panel className="w-[32rem] p-8 rounded-2xl border-4 border-white bg-zinc-950">
                                 <Dialog.Title className="text-3xl font-bold">Contact</Dialog.Title>
                                 <Dialog.Description>
-                                    <h1 className="font-bold mt-4">Want to reach out?</h1>
+                                    <h1 className="font-bold mt-4">Want to reach out? Feedback is always appreciated.</h1>
                                 </Dialog.Description>
 
                                 <form onSubmit={handleFormSubmit}> 
