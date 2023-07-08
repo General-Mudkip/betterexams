@@ -107,12 +107,16 @@ function ChoicesForm() {
 
     function setCorrectLevel(curLevel: string) {
         if (curLevel === "Higher" && tempHigherDisabled) {
+            currentLevel = "Ordinary";
             setLevel("Ordinary");
         } else if (curLevel === "Ordinary" && tempOrdinaryDisabled) {
+            currentLevel = "Higher";
             setLevel("Higher");
         } else if (curLevel === "Foundation" && tempFoundationDisabled) {
+            currentLevel = "Higher";
             setLevel("Higher");
         } else if (curLevel === "Common" && tempCommonDisabled) {
+            currentLevel = "Higher";
             setLevel("Higher");
         } else {
             setLevel(curLevel);
@@ -172,14 +176,18 @@ function ChoicesForm() {
 
     function handleYearChange(val: string) {
         tempYear = val;
+        setCorrectLevel(currentLevel);
         setYear(tempYear);
-        
     }
 
     function handleCertChange(val: string) {
         setCertificate(val);
-        setSubject(Object.keys(subNumsToNames)[0]); // Reset the subject to the first available option
-        setYear(Object.keys(data[val][Object.keys(subNumsToNames)[0]])[0]); // Reset the year to the first available option
+        setCorrectLevel(currentLevel);
+        let firstAvailableSubject = Object.keys(data[val])[0];
+        setSubject(firstAvailableSubject);
+        let yearArray = Object.keys(data[val][Object.keys(subNumsToNames)[0]]);
+        let firstAvailableYear = yearArray.at(-1) || '2021';
+        setYear(firstAvailableYear);
     }
 
     function handleSubjectChange(val: string) {
@@ -198,6 +206,8 @@ function ChoicesForm() {
                 setYear(lastKey);
             }
         }
+
+        setCorrectLevel(currentLevel);
     }
 
     // Loads the year choices dependent on what subject is selected
@@ -353,6 +363,9 @@ function ChoicesForm() {
                                                                     className="top-0 relative pl-10 ui-selected:bg-gray-700 py-2 ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100"
                                                                 >
                                                                     {subjectName}
+                                                                    <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
+                                                                        <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                                                    </span>
                                                                 </Combobox.Option>
                                                             );
                                                         }
@@ -438,7 +451,7 @@ function ChoicesForm() {
                                                         <span className="block truncate font-normal ui-selected:font-medium">
                                                             Higher
                                                         </span>
-                                                        <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
+                                                        <span className={`absolute inset-y-0 left-0 items-center pl-3 text-zinc-200 ${currentLevel === "Higher" ? "flex" : "hidden"}`}>
                                                             <CheckIcon className="h-5 w-5" aria-hidden="true" />
                                                         </span>
                                                     </>
@@ -454,7 +467,7 @@ function ChoicesForm() {
                                                         <span className="block truncate font-normal ui-selected:font-medium">
                                                             Ordinary
                                                         </span>
-                                                        <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
+                                                        <span className={`absolute inset-y-0 left-0 items-center pl-3 text-zinc-200 ${currentLevel === "Ordinary" ? "flex" : "hidden"}`}>
                                                             <CheckIcon className="h-5 w-5" aria-hidden="true" />
                                                         </span>
                                                     </>
@@ -469,7 +482,7 @@ function ChoicesForm() {
                                                         <span className="block truncate font-normal ui-selected:font-medium">
                                                             Foundation
                                                         </span>
-                                                        <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
+                                                        <span className={`absolute inset-y-0 left-0 items-center pl-3 text-zinc-200 ${currentLevel === "Foundation" ? "flex" : "hidden"}`}>
                                                             <CheckIcon className="h-5 w-5" aria-hidden="true" />
                                                         </span>
                                                     </>
@@ -484,7 +497,7 @@ function ChoicesForm() {
                                                         <span className="block truncate font-normal ui-selected:font-medium">
                                                             Common
                                                         </span>
-                                                        <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
+                                                        <span className={`absolute inset-y-0 left-0 items-center pl-3 text-zinc-200 ${currentLevel === "Common" ? "flex" : "hidden"}`}>
                                                             <CheckIcon className="h-5 w-5" aria-hidden="true" />
                                                         </span>
                                                     </>
