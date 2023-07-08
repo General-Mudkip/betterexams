@@ -25,7 +25,7 @@ function ChoicesForm() {
     const [examList, setExamList] = useState<string[][]>([]);
     const [query, setQuery] = useState('')
 
-    let tempExamList:string[][]; // To be used because of useState's asynchronity
+    let newExamList:string[][];
     let currentLevel: string = "Higher";
 
     let tempSubject:string = subject;
@@ -52,19 +52,18 @@ function ChoicesForm() {
         grabExamUrls(certificate, subject, year, language, level); // Sets up examList
     }, [certificate, subject, year, language, level, englishDisabled, irishDisabled]);
       
-    // Adds the exam link to the list of exam papers (TEMPORARY)
     function addExamToList(subjectId:string, examName: string, examUrl: string, category: string, year: string) {
 
         let fullExamUrl:string = `${url}/${category}/${year}/${examUrl}`
 
-        tempExamList.push([category, data["subNumsToNames"][subjectId], examName, year, fullExamUrl])
+        newExamList.push([category, data["subNumsToNames"][subjectId], examName, year, fullExamUrl])
 
     }
 
     // Returns a list of exam papers for a given subject, year, language, and level.
     function grabExamUrls(cert: string, subjectId: string, year: string, language:string, level: string) {
         
-        tempExamList = []; // Resets the temporary exam list
+        newExamList = [];
 
         if (englishDisabled) {
             setLanguage("IV");
@@ -82,48 +81,57 @@ function ChoicesForm() {
                 let docName = doc["details"];
                 let docUrl = doc["url"];
 
-                if ((docName.includes(language) || docName.includes("BV") || docName.includes("File") || docName.includes("Picture") || docName.includes("Map") || docName.includes("Source")) && (docName.includes(level) || docName.includes("Common") || docName.includes("File"))) {
-                    if (!(!(level == "Foundation") && docName.includes("Foundation") && docName.includes("File"))) { // Ensures that the Foundation level sound file isn't added to the list when a level other than Foundation is selected.
-                        
-                        if("exampapers" in documentList) { // Prevents the "exampapers" key from being accessed if it doesn't exist
-                            if(!(documentList["exampapers"].some((paperName: ExamPaper) => paperName.details.includes("Foundation") && !(docName.includes("Foundation")) && level == "Foundation"))) { // Sorry if you're reading this. Fix to an obscure bug where Sound Files from both Higher/Ordinary and Foundation would be included when "Foundation" was selected.
-                                addExamToList(subjectId, docName, docUrl, cat, year);
-                            }
+                let isCorrectLanguage = docName.includes(language)
+
+                let materialKeywords = /(BV|File|Picture|Map|Source)/
+
+                let isExamMaterial = (isCorrectLanguage || materialKeywords.test(docName));
+                let isCorrectLevel = (docName.includes(level) || docName.includes("Common") || docName.includes("File"))
+                let isNotFoundationFile = !(!(level == "Foundation") && docName.includes("Foundation") && docName.includes("File"));
+
+                if (isExamMaterial && isCorrectLevel && isNotFoundationFile) {
+                    if("exampapers" in documentList) { // Prevents the "exampapers" key from being accessed if it doesn't exist (edge cases)
+                        if(!(documentList["exampapers"].some((paperName: ExamPaper) => paperName.details.includes("Foundation") && !(docName.includes("Foundation")) && level == "Foundation"))) { // Sorry if you're reading this. Fix to an obscure bug where Sound Files from both Higher/Ordinary and Foundation would be included when "Foundation" was selected.
+                            addExamToList(subjectId, docName, docUrl, cat, year);
                         }
                     }
                 }
             }
         }
 
-        setExamList(tempExamList); // Sets the exam list to the newly generated list
+        setExamList(newExamList);
     }
 
     const handleLevelChange = (value: string) => {
         currentLevel = value;
         determineLevelAvailability();
-        setCorrectLevel(currentLevel);
+        ensureSubjectHasLevel(currentLevel);
         setLevel(currentLevel)
     }
 
-    function setCorrectLevel(curLevel: string) {
+    function ensureSubjectHasLevel(curLevel: string) {
         if (curLevel === "Higher" && tempHigherDisabled) {
             currentLevel = "Ordinary";
             setLevel("Ordinary");
+
         } else if (curLevel === "Ordinary" && tempOrdinaryDisabled) {
             currentLevel = "Higher";
             setLevel("Higher");
+
         } else if (curLevel === "Foundation" && tempFoundationDisabled) {
             currentLevel = "Higher";
             setLevel("Higher");
+
         } else if (curLevel === "Common" && tempCommonDisabled) {
             currentLevel = "Higher";
             setLevel("Higher");
+
         } else {
             setLevel(curLevel);
         }
     }
 
-    function determineLanguageAvailability() { // I promise this is the best way to do this
+    function determineLanguageAvailability() {
 
         try {
             const exampapers = data[certificate][subject][year]["exampapers"];
@@ -132,9 +140,11 @@ function ChoicesForm() {
     
             for (const doc of exampapers) {
                 const docName = doc.details;
+
                 if (docName.includes("EV")) {
                     setEnglishDisabled(false);
                 }
+
                 if (docName.includes("IV")) {
                     setIrishDisabled(false);
                 }
@@ -154,9 +164,13 @@ function ChoicesForm() {
             tempFoundationDisabled = true;
             tempCommonDisabled = true;
     
+            let testKeywords = /(Map|Illustration|Source)/
+
             for (const doc of exampapers) {
                 const docName = doc.details;
-                if (!(docName.includes("Map") || docName.includes("Illustration"))) { // Prevents common level material (e.g Maps in geography) from enabling Common level
+                let isCommonMaterial = testKeywords.test(docName)
+
+                if (!(isCommonMaterial)) { // Prevents common level material (e.g Maps in geography) from enabling Common level
                     if (docName.includes("Higher")) {
                         tempHigherDisabled = false;
                     }
@@ -176,17 +190,20 @@ function ChoicesForm() {
 
     function handleYearChange(val: string) {
         tempYear = val;
-        setCorrectLevel(currentLevel);
+        ensureSubjectHasLevel(currentLevel);
         setYear(tempYear);
     }
 
     function handleCertChange(val: string) {
         setCertificate(val);
-        setCorrectLevel(currentLevel);
+
+        ensureSubjectHasLevel(currentLevel);
+
         let firstAvailableSubject = Object.keys(data[val])[0];
         setSubject(firstAvailableSubject);
-        let yearArray = Object.keys(data[val][Object.keys(subNumsToNames)[0]]);
-        let firstAvailableYear = yearArray.at(-1) || '2021';
+
+        let arrayOfYears = Object.keys(data[val][Object.keys(subNumsToNames)[0]]);
+        let firstAvailableYear = arrayOfYears.at(-1) || '2021';
         setYear(firstAvailableYear);
     }
 
@@ -195,32 +212,30 @@ function ChoicesForm() {
 
         tempSubject = val;
 
-        console.log((!data[certificate][val].hasOwnProperty(year)))
+        let subjectContainsCurrentYear = data[certificate][val].hasOwnProperty(year) 
 
-        // Check if the selected year is valid for the new subject
-        if (!data[certificate][val].hasOwnProperty(year)) {
+        if (!subjectContainsCurrentYear) {
             // If the selected year is invalid, update the year state
             const lastKey = Object.keys(data[certificate][val]).at(-1);
-            console.log(lastKey)
             if (lastKey) {
                 setYear(lastKey);
             }
         }
 
-        setCorrectLevel(currentLevel);
+        ensureSubjectHasLevel(currentLevel);
     }
 
     // Loads the year choices dependent on what subject is selected
     function yearChoiceLoad() {
-        return Object.entries(data[certificate][subject]).map(([yeare]) => {
-            if (data[certificate][subject].hasOwnProperty(yeare)) {
+        return Object.entries(data[certificate][subject]).map(([year]) => {
+            if (data[certificate][subject].hasOwnProperty(year)) {
                 return (
-                    <Listbox.Option key={yeare} value={yeare} className={
+                    <Listbox.Option key={year} value={year} className={
                         `top-0 relative pl-10 ui-selected:bg-gray-700 py-[0.3rem] pt-[0.5rem]
                         ui-active:bg-zinc-800 ui-not-active:bg-black`
                         }>
                             <span className="block truncate font-normal ui-selected:font-medium">
-                                {yeare}
+                                {year}
                             </span>
                             <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
                                 <CheckIcon className="h-5 w-5" aria-hidden="true" />
@@ -451,7 +466,7 @@ function ChoicesForm() {
                                                         <span className="block truncate font-normal ui-selected:font-medium">
                                                             Higher
                                                         </span>
-                                                        <span className={`absolute inset-y-0 left-0 items-center pl-3 text-zinc-200 ${currentLevel === "Higher" ? "flex" : "hidden"}`}>
+                                                        <span className={`absolute inset-y-0 left-0 items-center pl-3 text-zinc-200 ${level === "Higher" ? "flex" : "hidden"}`}>
                                                             <CheckIcon className="h-5 w-5" aria-hidden="true" />
                                                         </span>
                                                     </>
@@ -467,7 +482,7 @@ function ChoicesForm() {
                                                         <span className="block truncate font-normal ui-selected:font-medium">
                                                             Ordinary
                                                         </span>
-                                                        <span className={`absolute inset-y-0 left-0 items-center pl-3 text-zinc-200 ${currentLevel === "Ordinary" ? "flex" : "hidden"}`}>
+                                                        <span className={`absolute inset-y-0 left-0 items-center pl-3 text-zinc-200 ${level === "Ordinary" ? "flex" : "hidden"}`}>
                                                             <CheckIcon className="h-5 w-5" aria-hidden="true" />
                                                         </span>
                                                     </>
@@ -482,7 +497,7 @@ function ChoicesForm() {
                                                         <span className="block truncate font-normal ui-selected:font-medium">
                                                             Foundation
                                                         </span>
-                                                        <span className={`absolute inset-y-0 left-0 items-center pl-3 text-zinc-200 ${currentLevel === "Foundation" ? "flex" : "hidden"}`}>
+                                                        <span className={`absolute inset-y-0 left-0 items-center pl-3 text-zinc-200 ${level === "Foundation" ? "flex" : "hidden"}`}>
                                                             <CheckIcon className="h-5 w-5" aria-hidden="true" />
                                                         </span>
                                                     </>
@@ -497,7 +512,7 @@ function ChoicesForm() {
                                                         <span className="block truncate font-normal ui-selected:font-medium">
                                                             Common
                                                         </span>
-                                                        <span className={`absolute inset-y-0 left-0 items-center pl-3 text-zinc-200 ${currentLevel === "Common" ? "flex" : "hidden"}`}>
+                                                        <span className={`absolute inset-y-0 left-0 items-center pl-3 text-zinc-200 ${level === "Common" ? "flex" : "hidden"}`}>
                                                             <CheckIcon className="h-5 w-5" aria-hidden="true" />
                                                         </span>
                                                     </>

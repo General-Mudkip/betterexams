@@ -10,17 +10,42 @@ interface PaperCardProps {
 
 function PaperCard({ type, subject, paperName, year, url }: PaperCardProps) {
     function determineCategoryName(catName: string) {
+        let title: string;
+
+        console.log(catName)
         switch (catName) {
             case "exampapers":
-                return "Exam Paper";
+                title = "Exam Paper";break;
+
             case "markingschemes":
-                return "Marking Scheme";
+                title = "Marking Scheme";break;
+
             case "deferredexams":
-                return "Deferred Exams";
+                title = "Deferred Exams";break;
+
             case "deferredmarkingschemes":
-                return "Deferred Marking Schemes";
+                title = "Deferred Marking Schemes";break;
+
             default:
-                return "Unknown";
+                title = "Unknown";
+        }
+
+        return determineEmoji() + title;
+    }
+
+    function determineEmoji() {
+         if (type.includes("marking")) {
+            return "✏️ "
+        } else if (paperName.includes("Paper") || paperName.includes("Part")) {
+            return "📄 "
+        } else if (paperName.includes("Map")) {
+            return "🗺️ "
+        } else if (paperName.includes("Picture")) {
+            return "🖼️ "
+        } else if (paperName.includes("Sound")) {
+            return "💿 "
+        } else {
+            return "📄 "
         }
     }
 

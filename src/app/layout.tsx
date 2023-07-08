@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
     title: "Better Exams",
-    description: "A simple website that helps with finding exam papers.",
+    description: "A simple website that allows you to easily find exam papers and marking schemes from examinations.ie",
 };
 
 export default function RootLayout({
