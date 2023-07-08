@@ -30,7 +30,7 @@ function PaperCard({ type, subject, paperName, year, url }: PaperCardProps) {
                 title = "Unknown";
         }
 
-        return determineEmoji() + title;
+        return title;
     }
 
     function determineEmoji() {
@@ -82,9 +82,8 @@ function PaperCard({ type, subject, paperName, year, url }: PaperCardProps) {
                         `}
                     >
                         <div>
-                            <h3 className="italic">
-                                {determineCategoryName(type)} • {subject}{" "}
-                                {/* TODO: Add a language */}
+                            <h3>
+                                {determineEmoji()} <span className="italic">{determineCategoryName(type)} • {subject}</span> 
                             </h3>
                             <h1 className="text-2xl font-bold mt-1">
                                 {paperName}
