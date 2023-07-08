@@ -64,7 +64,8 @@ function ContactDialog() {
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <div className="fixed h-full w-full inset-0 flex items-center justify-center p-4">
+                        <div className="fixed inset-0 overflow-y-auto">
+                            <div className="flex min-h-full items-center justify-center align-middle p-4">
                             <Dialog.Panel className="w-[32rem] p-8 rounded-2xl border-4 border-white bg-zinc-950">
                                 <Dialog.Title className="text-3xl font-bold">Contact</Dialog.Title>
                                 <Dialog.Description>
@@ -75,13 +76,13 @@ function ContactDialog() {
                                     <div className="flex flex-col space-y-2 mt-4">
 
                                         <label htmlFor="name" className="font-bold">Name</label>
-                                        <input type="text" name="name" id="name" className="rounded-md p-1 pl-2 bg-zinc-900" />
+                                        <input type="text" name="name" id="name" className="rounded-md w-auto p-1 pl-2 bg-zinc-900" />
 
                                         <label htmlFor="email" className="font-bold">Email</label>
-                                        <input type="email" name="email" id="email" className="rounded-md p-1 pl-2 bg-zinc-900" />
+                                        <input type="email" name="email" id="email" className="rounded-md w-auto p-1 pl-2 bg-zinc-900" />
 
                                         <label htmlFor="message" className="font-bold">Message</label>
-                                        <textarea name="message" id="message" className="rounded-md p-1 pl-2 bg-zinc-900" />
+                                        <textarea name="message" id="message" className="rounded-md w-auto p-1 pl-2 bg-zinc-900" />
 
                                         <button 
                                             type="submit"
@@ -95,6 +96,7 @@ function ContactDialog() {
 
                                 <button onClick={() => setContactIsOpen(false)} className="mt-4 rounded-md p-2 hover:scale-105">Close</button>
                             </Dialog.Panel>
+                            </div>
                         </div>
                     </motion.div>
                 </Dialog>

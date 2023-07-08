@@ -22,7 +22,8 @@ function AboutDialog() {
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <div className="fixed h-full w-full inset-0 flex items-center justify-center p-4">
+                        <div className="fixed inset-0 overflow-y-auto">
+                            <div className="flex min-h-full items-center justify-center p-4">
                             <Dialog.Panel className="w-[32rem] p-8 rounded-2xl border-4 border-white bg-zinc-950">
                                 <Dialog.Title className="text-3xl font-bold">About</Dialog.Title>
                                 <Dialog.Description>
@@ -47,6 +48,7 @@ function AboutDialog() {
 
                                 <button onClick={() => setAboutIsOpen(false)} className="mt-4 rounded-md p-2 hover:scale-105">Close</button>
                             </Dialog.Panel>
+                            </div>
                         </div>
                     </motion.div>
                 </Dialog>
