@@ -9,7 +9,7 @@ function Footer() {
 
     return (
         <footer className="flex flex-col items-center w-96 mt-10 lg:mt-0">
-            <div className="flex w-full flex-row flex-wrap items-center justify-center space-x-2 text-center">
+            <div className="flex w-full flex-row flex-wrap items-center justify-center space-x-2 text-center text-xl sm:text-lg">
                 <button
                     onClick={() => setAboutIsOpen(true)}
                     className="group cursor-pointer !bg-transparent text-blue-400 hover:text-blue-500 transition-all duration-300"
