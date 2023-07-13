@@ -5,8 +5,9 @@ import { Analytics } from "@vercel/analytics/react";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-    title: "Better Exams",
-    description: "A simple website that allows you to easily find exam papers and marking schemes from examinations.ie",
+    title: "Better Exams | An Alternative To Examinations.ie",
+    keywords: "examinations.ie, exams, leaving cert, junior cert, papers",
+    description: "The best way to search for and access exam papers sourced from examinations.ie",
 };
 
 export default function RootLayout({

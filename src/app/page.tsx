@@ -8,7 +8,7 @@ export default function Home() {
     return (
         <main className="min-h-screen h-full flex flex-col -mt-12 items-center p-24 lg:mt-0">
             <h1 className="text-6xl font-bold text-center">Better Exams</h1>
-            <p className="italic text-white/70 mt-1 text-center">An Alternative To Examinations.ie</p>
+            <h2 className="italic text-white/70 mt-1 text-center">An Alternative To Examinations.ie</h2>
 
             <div className="text-slate-400 items-center h-full mt-8 md:mt-14">
                 <ChoicesForm />
