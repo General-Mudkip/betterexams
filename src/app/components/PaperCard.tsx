@@ -12,7 +12,6 @@ function PaperCard({ type, subject, paperName, year, url }: PaperCardProps) {
     function determineCategoryName(catName: string) {
         let title: string;
 
-        console.log(catName)
         switch (catName) {
             case "exampapers":
                 title = "Exam Paper";break;

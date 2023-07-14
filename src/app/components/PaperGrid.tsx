@@ -5,6 +5,10 @@ interface PaperGridProps {
 }
 
 function PaperGrid({ examPaperList }: PaperGridProps) {
+
+    console.log(examPaperList)
+
+
     const deferredPapers = examPaperList.filter((paper) =>
         paper[0].includes("deferred")
     );

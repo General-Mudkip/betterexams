@@ -11,7 +11,6 @@ var data = require('../files/data.json');
 var subNumsToNames = data["subNumsToNames"]
 
 const url: string = "https://www.examinations.ie/archive";
-
 function ChoicesForm() {
     const [certificate, setCertificate] = useState<string>('lc');
     const [subject, setSubject] = useState<string>('3');
@@ -36,12 +35,10 @@ function ChoicesForm() {
     let tempFoundationDisabled: boolean = false;
     let tempCommonDisabled: boolean = false;
 
-    determineLevelAvailability()    
-
     type ExamPaper = {
         details: string;
         url: string;
-      };
+    };
 
     useEffect(() => {
         determineLanguageAvailability();
@@ -60,9 +57,19 @@ function ChoicesForm() {
 
     }
 
+    function checkIfAllYears(){
+        if (tempYear === "All Years") {
+            return true;
+        } else{
+            return false;
+        }
+    }
+
     // Returns a list of exam papers for a given subject, year, language, and level.
     function grabExamUrls(cert: string, subjectId: string, year: string, language:string, level: string) {
         
+        if (checkIfAllYears()) { return; }
+
         newExamList = [];
 
         if (englishDisabled) {
@@ -70,8 +77,6 @@ function ChoicesForm() {
         } else if (irishDisabled) {
             setLanguage("EV");
         }
-
-        determineLevelAvailability()
 
         let documentList = data[cert][subjectId][year]; // Navigates to the specific subject and year.
         let categories = Object.keys(documentList); // exampapers, marking schemes, etc.
@@ -109,6 +114,51 @@ function ChoicesForm() {
         setLevel(currentLevel)
     }
 
+    function handleAllYearOption() {
+        newExamList = []
+        
+        if (englishDisabled) {
+            setLanguage("IV");
+        } else if (irishDisabled) {
+            setLanguage("EV");
+        }
+
+        let documentList = data[certificate][subject];
+        const years = Object.keys(documentList)
+        
+
+        for (const currentYear of years) {
+            let currentYearList = documentList[currentYear];
+            for (const cat of (Object.keys(currentYearList))) {
+                for (const doc of currentYearList[cat]) {
+                    let docName = doc["details"];
+                    let docUrl = doc["url"];
+
+                    let catKeys = Object.keys(documentList[currentYear])
+
+                    let isCorrectLanguage = docName.includes(language)
+
+
+                    let materialKeywords = /(BV|File|Picture|Map|Source)/
+
+                    let isExamMaterial = (isCorrectLanguage || materialKeywords.test(docName));
+                    let isCorrectLevel = (docName.includes(level) || docName.includes("Common") || docName.includes("File"))
+                    let isNotFoundationFile = !(!(level == "Foundation") && docName.includes("Foundation") && docName.includes("File"));
+
+                    if (isExamMaterial && isCorrectLevel && isNotFoundationFile) {
+                        if(catKeys.includes("exampapers")) { // Prevents the "exampapers" key from being accessed if it doesn't exist (edge cases)
+                            if(!(currentYearList["exampapers"].some((paperName: ExamPaper) => paperName.details.includes("Foundation") && !(docName.includes("Foundation")) && level == "Foundation"))) { // Sorry if you're reading this. Fix to an obscure bug where Sound Files from both Higher/Ordinary and Foundation would be included when "Foundation" was selected.
+                                addExamToList(subject, docName, docUrl, cat, currentYear);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        setExamList(newExamList)
+    }
+
     function ensureSubjectHasLevel(curLevel: string) {
         if (curLevel === "Higher" && tempHigherDisabled) {
             currentLevel = "Ordinary";
@@ -133,6 +183,8 @@ function ChoicesForm() {
 
     function determineLanguageAvailability() {
 
+        if (checkIfAllYears()) { return; }
+
         try {
             const exampapers = data[certificate][subject][year]["exampapers"];
             setEnglishDisabled(true);
@@ -155,6 +207,8 @@ function ChoicesForm() {
     }
 
     function determineLevelAvailability() {
+
+        if (checkIfAllYears()) { return; }
 
         if ("exampapers" in data[certificate][tempSubject][tempYear]) {
             const exampapers = data[certificate][tempSubject][tempYear]["exampapers"];
@@ -190,8 +244,14 @@ function ChoicesForm() {
 
     function handleYearChange(val: string) {
         tempYear = val;
-        ensureSubjectHasLevel(currentLevel);
-        setYear(tempYear);
+
+        if(val === "All Years") {
+            handleAllYearOption();
+            setYear("All Years")
+        } else {
+            ensureSubjectHasLevel(currentLevel);
+            setYear(tempYear);
+        }
     }
 
     function handleCertChange(val: string) {
@@ -420,6 +480,17 @@ function ChoicesForm() {
                                         className="absolute w-full z-50"
                                     >
                                         <Listbox.Options static className="max-h-64 mt-2 border-2 h-full border-white overflow-auto z-50 w-full rounded-md bg-gray-950 text-white">
+                                            <Listbox.Option key="allyears" value="All Years" className={
+                                              `top-0 relative pl-10 ui-selected:bg-gray-700 py-[0.3rem] pt-[0.5rem]
+                                                ui-active:bg-zinc-800 ui-not-active:bg-black`
+                                            }>
+                                                <span className="block truncate font-normal ui-selected:font-medium">
+                                                  All Years
+                                                </span>
+                                                <span className="absolute hidden inset-y-0 left-0 items-center pl-3 text-zinc-200 ui-selected:flex">
+                                                    <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                                </span>
+                                            </Listbox.Option>
                                             {yearChoiceLoad()}
                                         </Listbox.Options>
                                     </motion.div>
