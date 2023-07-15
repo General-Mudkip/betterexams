@@ -32,7 +32,7 @@ function PaperGrid({ examPaperList }: PaperGridProps) {
 
                 <button
                     className="mb-5 whitespace-nowrap w-min
-                    bg-zinc-900 p-2 rounded-lg border-white border-2 text-white            
+                    bg-zinc-900 p-3 rounded-lg border-white border-2 text-white            
                     "
                     onClick={() => setShareIsOpen(true)}
                 >
