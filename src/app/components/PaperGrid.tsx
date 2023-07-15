@@ -5,7 +5,7 @@ interface PaperGridProps {
     examPaperList: string[][];
 }
 
-let shareIsOpenAtom = atom(true)
+let shareIsOpenAtom = atom(false)
 
 function PaperGrid({ examPaperList }: PaperGridProps) {
 
