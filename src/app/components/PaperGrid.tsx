@@ -5,7 +5,6 @@ interface PaperGridProps {
 }
 
 function PaperGrid({ examPaperList }: PaperGridProps) {
-    console.log(examPaperList)
 
     const years: string[] = [];
     for (const element of examPaperList) {

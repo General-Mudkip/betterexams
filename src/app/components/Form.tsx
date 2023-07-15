@@ -5,6 +5,7 @@ import PaperGrid from './PaperGrid';
 import { Combobox, Listbox } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { AnimatePresence, motion } from "framer-motion"
+import { useSearchParams } from "next/navigation";
 
 // INITIALISATION
 var data = require('../files/data.json');
@@ -13,18 +14,37 @@ var subNumsToNames = data["subNumsToNames"]
 const url: string = "https://www.examinations.ie/archive";
 
 function ChoicesForm() {
-    const [certificate, setCertificate] = useState<string>('lc');
-    const [subject, setSubject] = useState<string>('3');
-    const [year, setYear] = useState<string>('2022');
+    const query = useSearchParams();
 
-    const [language, setLanguage] = useState<string>('EV');
-    const [level, setLevel] = useState<string>('Higher');
+    let certSet = "lc"
+    let subjectSet = "3"
+    let yearSet = "2022"
+    let levelSet = "Higher"
+    let langSet = "EV"
+
+    if (query) {
+        certSet = query.get("cert") as string
+        subjectSet = query.get("subject") as string
+        yearSet = query.get("year") as string
+        levelSet = query.get("level") as string
+        langSet = query.get("lang") as string
+
+        console.log(certSet, subjectSet, yearSet, levelSet, langSet)
+    }
+
+
+    const [certificate, setCertificate] = useState<string>(certSet);
+    const [subject, setSubject] = useState<string>(subjectSet);
+    const [year, setYear] = useState<string>(yearSet);
+
+    const [language, setLanguage] = useState<string>(langSet);
+    const [level, setLevel] = useState<string>(levelSet);
 
     const [englishDisabled, setEnglishDisabled] = useState<boolean>(false);
     const [irishDisabled, setIrishDisabled] = useState<boolean>(true);
 
     const [examList, setExamList] = useState<string[][]>([]);
-    const [query, setQuery] = useState('')
+    const [filterQuery, setFilterQuery] = useState('')
 
     let newExamList: string[][];
     let currentLevel: string = "Higher";
@@ -36,8 +56,6 @@ function ChoicesForm() {
     let tempOrdinaryDisabled: boolean = false;
     let tempFoundationDisabled: boolean = false;
     let tempCommonDisabled: boolean = false;
-
-    console.log()
 
     type ExamPaper = {
         details: string;
@@ -321,10 +339,10 @@ function ChoicesForm() {
     });
 
     const filteredSubjects =
-        query === ''
+        filterQuery === ''
             ? Object.values(uniqueSubNumsToNames)
             : Object.values(uniqueSubNumsToNames).filter((subjectName) =>
-                (subjectName as string).toLowerCase().includes(query.toLowerCase())
+                (subjectName as string).toLowerCase().includes(filterQuery.toLowerCase())
             );
 
     return (
@@ -403,7 +421,7 @@ function ChoicesForm() {
                                     <Combobox.Input
                                         className="w-full h-full border-none pl-3 pr-10 leading-5 bg-zinc-900 text-white focus:ring-0"
                                         displayValue={() => subNumsToNames[subject]}
-                                        onChange={(event) => setQuery(event.target.value)}
+                                        onChange={(event) => setFilterQuery(event.target.value)}
                                         aria-label="subjects"
                                     />
                                     <Combobox.Button className="absolute inset-y-0 right-0 flex items-center px-2" aria-label="expand subjects">
@@ -424,7 +442,7 @@ function ChoicesForm() {
                                             className="absolute w-full z-50"
                                         >
                                             <Combobox.Options static className="mt-2 z-50 py-2 w-full h-full max-h-72 overflow-auto rounded-md bg-gray-950 border-2 border-white text-white">
-                                                {filteredSubjects.length === 0 && query !== "" ? (
+                                                {filteredSubjects.length === 0 && filterQuery !== "" ? (
                                                     <div className="relative cursor-default select-none py-2 px-4 text-white">
                                                         No subjects found.
                                                     </div>
