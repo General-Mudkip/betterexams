@@ -2,13 +2,39 @@ import { Dialog } from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAtom } from "jotai";
 import { shareIsOpenAtom } from "../PaperGrid"
-import { selectionArrayAtom } from "../Form"
+import { selectionArrayAtom, examPaperListAtom } from "../Form"
 
 function ShareDialog() {
     let [shareIsOpen, setShareIsOpen] = useAtom(shareIsOpenAtom);
     let [selectionArray, setSelectionArray] = useAtom(selectionArrayAtom);
+    let [examList, setExamList] = useAtom(examPaperListAtom)
 
-    let shareUrl = `localhost:3000?cert=${selectionArray[0]}&subject=${selectionArray[1]}&year=${selectionArray[2]}&lang=${selectionArray[3]}&level=${selectionArray[4]}`
+    console.log(examList)
+
+    let shareUrl = `https://www.betterexams.ie?cert=${selectionArray[0]}&subject=${selectionArray[1]}&year=${selectionArray[2]}&lang=${selectionArray[3]}&level=${selectionArray[4]}`
+
+    function determineCategoryName(catName: string) {
+        let title: string;
+
+        switch (catName) {
+            case "exampapers":
+                title = "Exam Paper";break;
+
+            case "markingschemes":
+                title = "Marking Scheme";break;
+
+            case "deferredexams":
+                title = "Deferred Exams";break;
+
+            case "deferredmarkingschemes":
+                title = "Deferred Marking Schemes";break;
+
+            default:
+                title = "Unknown";
+        }
+
+        return title;
+    }
 
     function copyToClipboard(text: string) {
         navigator.clipboard.writeText(text)
@@ -25,6 +51,12 @@ function ShareDialog() {
             .catch((error) => {
                 console.error("Failed to copy to clipboard: ", error)
             })
+    }
+
+    function examListToString(){
+        return examList
+            .map((paper) =>`(${determineCategoryName(paper[0])}) ${paper[2]}: ${paper[4]}`)
+            .join('\n\n');
     }
 
     return (
@@ -45,18 +77,24 @@ function ShareDialog() {
                             <div className="flex min-h-full items-center justify-center p-4">
                                 <Dialog.Panel className="w-[32rem] p-8 rounded-2xl border-4 border-white bg-zinc-950">
                                     <Dialog.Title className="text-3xl font-bold">Share</Dialog.Title>
-                                    <Dialog.Description>
+                                    <Dialog.Description className="flex flex-col">
                                         <h3 className="text-sm text-slate-300 italic">Want to share your current selection with someone else?</h3>
                                         <h2 className="mb-2 text-xl mt-4">Shareable Link:</h2>
-                                        <div className="bg-zinc-900 border-2 p-2 rounded-md border-white items-center flex">
-                                            <span className="flex-grow-0 truncate">
+                                        <div className="max-w-[36rem] bg-zinc-900 border-2 p-2 rounded-md border-white items-center flex flex-row">
+                                            <span className="shrink"> {/*TODO: MAKE THIS TRUNCATED*/}
                                                 {shareUrl}
                                             </span>
 
-                                            <button className="border-2 border-white p-2 rounded-md" id="copybutton" onClick={() => copyToClipboard(shareUrl)}>
+                                            <button className="border-2 border-white p-2 rounded-md ml-2" id="copybutton" onClick={() => copyToClipboard(shareUrl)}>
                                                 Copy
                                             </button>
                                         </div>
+
+                                        <h2 className="mt-4 mb-2 text-xl">Or alternatively, copy and paste this:</h2>
+                                        <textarea 
+                                            className="bg-zinc-900 text-white rounded-md border-2 border-white w-full h-48"
+                                            value={examListToString()}
+                                        ></textarea>
                                     </Dialog.Description>
 
                                     <button onClick={() => setShareIsOpen(false)} className="mt-4 rounded-md p-2 hover:scale-105">Close</button>

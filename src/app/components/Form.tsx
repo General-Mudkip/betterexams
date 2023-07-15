@@ -13,6 +13,7 @@ var data = require('../files/data.json');
 var subNumsToNames = data["subNumsToNames"]
 
 let selectionArrayAtom = atom(["lc", "3", "2022", "EV", "Higher"]);
+let examPaperListAtom = atom([[""]])
 
 const url: string = "https://www.examinations.ie/archive";
 
@@ -20,6 +21,7 @@ function ChoicesForm() {
     const query = useSearchParams();
 
     let [selectionArray, setSelectionArray] = useAtom(selectionArrayAtom);
+    let [examListAtom, setExamListAtom] = useAtom(examPaperListAtom)
 
     let certSet = "lc"
     let subjectSet = "3"
@@ -42,6 +44,13 @@ function ChoicesForm() {
     const [language, setLanguage] = useState<string>(langSet);
     const [level, setLevel] = useState<string>(levelSet);
 
+    const params = {
+        cert: certSet,
+        subject: subjectSet,
+        year: yearSet,
+        lang: langSet,
+        level: levelSet
+    }
 
     const [englishDisabled, setEnglishDisabled] = useState<boolean>(false);
     const [irishDisabled, setIrishDisabled] = useState<boolean>(true);
@@ -133,6 +142,7 @@ function ChoicesForm() {
         }
 
         setExamList(newExamList);
+        setExamListAtom(newExamList);
     }
 
     const handleLevelChange = (value: string) => {
@@ -651,5 +661,5 @@ function ChoicesForm() {
 
 }
 
-export { selectionArrayAtom }
+export { selectionArrayAtom, examPaperListAtom }
 export default ChoicesForm;
