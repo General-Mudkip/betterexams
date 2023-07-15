@@ -1,10 +1,15 @@
 import PaperCard from "./PaperCard";
+import { atom, useAtom } from "jotai";
 
 interface PaperGridProps {
     examPaperList: string[][];
 }
 
+let shareIsOpenAtom = atom(true)
+
 function PaperGrid({ examPaperList }: PaperGridProps) {
+
+    let [shareIsOpen, setShareIsOpen] = useAtom(shareIsOpenAtom)
 
     const years: string[] = [];
     for (const element of examPaperList) {
@@ -23,33 +28,21 @@ function PaperGrid({ examPaperList }: PaperGridProps) {
         );
 
         return (
-            <div className="mt-8 justify-center">
-                {nonDeferredPapers.length > 0 && (
-                    <div className="flex flex-row flex-wrap gap-8 justify-center">
-                        {nonDeferredPapers.map((paper, index) => (
-                            <PaperCard
-                                key={
-                                    paper[0] +
-                                    paper[1] +
-                                    paper[2] +
-                                    paper[3] +
-                                    index
-                                }
-                                type={paper[0]}
-                                subject={paper[1]}
-                                paperName={paper[2]}
-                                year={paper[3]}
-                                url={paper[4]}
-                            />
-                        ))}
-                    </div>
-                )}
+            <div className="mt-8 justify-center items-center flex flex-col">
 
-                {deferredPapers.length > 0 && (
-                    <>
-                        <hr className="mt-8 border-dashed"></hr>
-                        <div className="flex flex-row flex-wrap gap-8 mt-8 justify-center">
-                            {deferredPapers.map((paper, index) => (
+                <button
+                    className="mb-5 whitespace-nowrap w-min
+                    bg-zinc-900 p-2 rounded-lg border-white border-2 text-white            
+                    "
+                    onClick={() => setShareIsOpen(true)}
+                >
+                    Share Current Selection
+                </button>
+
+                {
+                    nonDeferredPapers.length > 0 && (
+                        <div className="flex flex-row flex-wrap gap-8 justify-center">
+                            {nonDeferredPapers.map((paper, index) => (
                                 <PaperCard
                                     key={
                                         paper[0] +
@@ -66,9 +59,35 @@ function PaperGrid({ examPaperList }: PaperGridProps) {
                                 />
                             ))}
                         </div>
-                    </>
-                )}
-            </div>
+                    )
+                }
+
+                {
+                    deferredPapers.length > 0 && (
+                        <>
+                            <hr className="mt-8 border-dashed"></hr>
+                            <div className="flex flex-row flex-wrap gap-8 mt-8 justify-center">
+                                {deferredPapers.map((paper, index) => (
+                                    <PaperCard
+                                        key={
+                                            paper[0] +
+                                            paper[1] +
+                                            paper[2] +
+                                            paper[3] +
+                                            index
+                                        }
+                                        type={paper[0]}
+                                        subject={paper[1]}
+                                        paperName={paper[2]}
+                                        year={paper[3]}
+                                        url={paper[4]}
+                                    />
+                                ))}
+                            </div>
+                        </>
+                    )
+                }
+            </div >
         );
     } else {
         return (
@@ -107,4 +126,6 @@ function PaperGrid({ examPaperList }: PaperGridProps) {
         )
     }
 }
+
+export { shareIsOpenAtom };
 export default PaperGrid;

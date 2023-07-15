@@ -6,15 +6,20 @@ import { Combobox, Listbox } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { AnimatePresence, motion } from "framer-motion"
 import { useSearchParams } from "next/navigation";
+import { atom, useAtom } from "jotai";
 
 // INITIALISATION
 var data = require('../files/data.json');
 var subNumsToNames = data["subNumsToNames"]
 
+let selectionArrayAtom = atom(["lc", "3", "2022", "EV", "Higher"]);
+
 const url: string = "https://www.examinations.ie/archive";
 
 function ChoicesForm() {
     const query = useSearchParams();
+
+    let [selectionArray, setSelectionArray] = useAtom(selectionArrayAtom);
 
     let certSet = "lc"
     let subjectSet = "3"
@@ -23,15 +28,12 @@ function ChoicesForm() {
     let langSet = "EV"
 
     if (query) {
-        certSet = query.get("cert") as string
-        subjectSet = query.get("subject") as string
-        yearSet = query.get("year") as string
-        levelSet = query.get("level") as string
-        langSet = query.get("lang") as string
-
-        console.log(certSet, subjectSet, yearSet, levelSet, langSet)
+        certSet = query.has("cert") ? query.get("cert") as string : "lc";
+        subjectSet = query.has("subject") ? query.get("subject") as string : "3";
+        yearSet = query.has("year") ? query.get("year") as string : "2022";
+        levelSet = query.has("level") ? query.get("level") as string : "Higher";
+        langSet = query.has("lang") ? query.get("lang") as string : "EV";
     }
-
 
     const [certificate, setCertificate] = useState<string>(certSet);
     const [subject, setSubject] = useState<string>(subjectSet);
@@ -39,6 +41,7 @@ function ChoicesForm() {
 
     const [language, setLanguage] = useState<string>(langSet);
     const [level, setLevel] = useState<string>(levelSet);
+
 
     const [englishDisabled, setEnglishDisabled] = useState<boolean>(false);
     const [irishDisabled, setIrishDisabled] = useState<boolean>(true);
@@ -63,6 +66,7 @@ function ChoicesForm() {
     };
 
     useEffect(() => {
+        setSelectionArray([certificate, subject, year, language, level]);
         determineLanguageAvailability();
         determineLevelAvailability();
     }, [certificate, subject, year]);
@@ -99,6 +103,8 @@ function ChoicesForm() {
         } else if (irishDisabled) {
             setLanguage("EV");
         }
+
+        setSelectionArray([cert, subjectId, year, language, level]);
 
         let documentList = data[cert][subjectId][year]; // Navigates to the specific subject and year.
         let categories = Object.keys(documentList); // exampapers, marking schemes, etc.
@@ -645,4 +651,5 @@ function ChoicesForm() {
 
 }
 
+export { selectionArrayAtom }
 export default ChoicesForm;

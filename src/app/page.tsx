@@ -1,6 +1,7 @@
 "use client";
 import AboutDialog from "./components/Dialogs/AboutDialog";
 import ContactDialog from "./components/Dialogs/ContactDialog";
+import ShareDialog from "./components/Dialogs/ShareDialog"
 import Footer from "./components/Footer";
 import ChoicesForm from "./components/Form";
 
@@ -17,6 +18,7 @@ export default function Home() {
             <div className="flex-grow mt-14" />
             <AboutDialog />
             <ContactDialog />
+            <ShareDialog />
             <Footer />
         </main>
     );
