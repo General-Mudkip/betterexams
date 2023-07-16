@@ -14,16 +14,16 @@ function PaperCard({ type, subject, paperName, year, url }: PaperCardProps) {
 
         switch (catName) {
             case "exampapers":
-                title = "Exam Paper";break;
+                title = "Exam Paper"; break;
 
             case "markingschemes":
-                title = "Marking Scheme";break;
+                title = "Marking Scheme"; break;
 
             case "deferredexams":
-                title = "Deferred Exams";break;
+                title = "Deferred Exams"; break;
 
             case "deferredmarkingschemes":
-                title = "Deferred Marking Schemes";break;
+                title = "Deferred Marking Schemes"; break;
 
             default:
                 title = "Unknown";
@@ -33,7 +33,7 @@ function PaperCard({ type, subject, paperName, year, url }: PaperCardProps) {
     }
 
     function determineEmoji() {
-         if (type.includes("marking")) {
+        if (type.includes("marking")) {
             return "✏️ "
         } else if (paperName.includes("Paper") || paperName.includes("Part")) {
             return "📄 "
@@ -82,7 +82,7 @@ function PaperCard({ type, subject, paperName, year, url }: PaperCardProps) {
                     >
                         <div>
                             <h3>
-                                {determineEmoji()} <span className="italic">{determineCategoryName(type)} • {subject}</span> 
+                                {determineEmoji()} <span className="italic">{determineCategoryName(type)} • {subject}</span>
                             </h3>
                             <h1 className="text-2xl font-bold mt-1">
                                 {paperName}
