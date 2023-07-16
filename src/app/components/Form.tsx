@@ -73,7 +73,7 @@ function ChoicesForm() {
     setSelectionArray([certificate, subject, year, language, level]);
     determineLanguageAvailability();
     determineLevelAvailability();
-    grabExamUrls(certificate, subject, year, language, level); // Sets up examList
+    if (!checkIfAllYears()) { grabExamUrls(certificate, subject, year, language, level) } else { handleAllYearOption() }
 
   }, [certificate, subject, year, language, level, englishDisabled, irishDisabled]);
 
