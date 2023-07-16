@@ -17,7 +17,6 @@ let examPaperListAtom = atom([[""]])
 
 const url: string = "https://www.examinations.ie/archive";
 
-
 let certSet = "lc"
 let subjectSet = "3"
 let yearSet = "2022"
@@ -38,7 +37,6 @@ function ChoicesForm() {
 
   let [selectionArray, setSelectionArray] = useAtom(selectionArrayAtom);
   let [examListAtom, setExamListAtom] = useAtom(examPaperListAtom)
-
 
   if (searchQuery) {
     certSet = searchQuery.has("cert") ? searchQuery.get("cert") as string : "lc";
@@ -61,7 +59,6 @@ function ChoicesForm() {
   const [examList, setExamList] = useState<string[][]>([]);
   const [filterQuery, setFilterQuery] = useState('')
 
-
   let tempSubject: string = subject;
   let tempYear: string = year;
 
@@ -81,11 +78,9 @@ function ChoicesForm() {
   }, [certificate, subject, year, language, level, englishDisabled, irishDisabled]);
 
   function addExamToList(subjectId: string, examName: string, examUrl: string, category: string, year: string) {
-
     let fullExamUrl: string = `${url}/${category}/${year}/${examUrl}`
 
     newExamList.push([category, data["subNumsToNames"][subjectId], examName, year, fullExamUrl])
-
   }
 
   function checkIfAllYears() {

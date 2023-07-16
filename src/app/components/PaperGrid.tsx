@@ -6,10 +6,12 @@ interface PaperGridProps {
 }
 
 let shareIsOpenAtom = atom(false)
+let resourcesIsOpenAtom = atom(true)
 
 function PaperGrid({ examPaperList }: PaperGridProps) {
 
-  let [shareIsOpen, setShareIsOpen] = useAtom(shareIsOpenAtom)
+  let [, setShareIsOpen] = useAtom(shareIsOpenAtom)
+  let [, setResourcesIsOpen] = useAtom(resourcesIsOpenAtom)
 
   const years: string[] = [];
   for (const element of examPaperList) {
@@ -30,15 +32,25 @@ function PaperGrid({ examPaperList }: PaperGridProps) {
     return (
       <div className="mt-8 justify-center items-center flex flex-col">
 
-        <button
-          className="mb-5 whitespace-nowrap w-min
+        <div className="flex flex-row gap-4">
+          <button
+            className="mb-5 whitespace-nowrap w-min
                     bg-zinc-900 p-3 rounded-lg border-white border-2 text-white            
                     "
-          onClick={() => setShareIsOpen(true)}
-        >
-          Share Current Selection
-        </button>
+            onClick={() => setShareIsOpen(true)}
+          >
+            Share Links
+          </button>
 
+          <button
+            className="mb-5 whitespace-nowrap w-min
+                    bg-zinc-900 p-3 rounded-lg border-white border-2 text-white            
+                    "
+            onClick={() => setResourcesIsOpen(true)}
+          >
+            {examPaperList[0][1]} Resources
+          </button>
+        </div>
         {
           nonDeferredPapers.length > 0 && (
             <div className="flex flex-row flex-wrap gap-8 justify-center">
@@ -65,8 +77,7 @@ function PaperGrid({ examPaperList }: PaperGridProps) {
         {
           deferredPapers.length > 0 && (
             <>
-              <hr className="mt-8 border-dashed"></hr>
-              <div className="flex flex-row flex-wrap gap-8 mt-8 justify-center">
+              <div className="flex flex-row flex-wrap gap-8 mt-12 justify-center">
                 {deferredPapers.map((paper, index) => (
                   <PaperCard
                     key={
@@ -127,5 +138,5 @@ function PaperGrid({ examPaperList }: PaperGridProps) {
   }
 }
 
-export { shareIsOpenAtom };
+export { shareIsOpenAtom, resourcesIsOpenAtom };
 export default PaperGrid;
