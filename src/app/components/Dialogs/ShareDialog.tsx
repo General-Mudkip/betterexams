@@ -80,8 +80,8 @@ function ShareDialog() {
                   <Dialog.Description className="flex flex-col">
                     <h3 className="text-sm text-slate-300 italic">Want to share your current selection with someone else?</h3>
                     <h2 className="mb-2 text-xl mt-4">Shareable Link:</h2>
-                    <div className="max-w-[36rem] bg-zinc-900 border-2 p-2 rounded-md border-white items-center flex flex-row">
-                      <span className="shrink"> {/* TODO: MAKE THIS TRUNCATED*/}
+                    <div className="max-w-[36rem] bg-zinc-900 border-2 py-1 px-2 rounded-md border-white items-center flex flex-row">
+                      <span className="shrink w-0 flex-1 truncate">
                         {shareUrl}
                       </span>
 
@@ -92,7 +92,7 @@ function ShareDialog() {
 
                     <h2 className="mt-4 mb-2 text-xl">Or alternatively, copy and paste this:</h2>
                     <textarea
-                      className="bg-zinc-900 text-white rounded-md border-2 border-white w-full h-48"
+                      className="bg-zinc-900 text-white rounded-md p-2 border-2 border-white w-full h-48"
                       value={examListToString()}
                     ></textarea>
                   </Dialog.Description>
