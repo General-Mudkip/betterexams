@@ -32,7 +32,7 @@ function PaperGrid({ examPaperList }: PaperGridProps) {
     return (
       <div className="mt-8 justify-center items-center flex flex-col">
 
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-row flex-wrap gap-x-4 justify-center">
           <button
             className="mb-5 whitespace-nowrap w-min
                     bg-zinc-900 p-3 rounded-lg border-white border-2 text-white            
