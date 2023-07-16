@@ -17,17 +17,28 @@ let examPaperListAtom = atom([[""]])
 
 const url: string = "https://www.examinations.ie/archive";
 
+
+let certSet = "lc"
+let subjectSet = "3"
+let yearSet = "2022"
+let levelSet = "Higher"
+let langSet = "EV"
+
+let newExamList: string[][];
+let currentLevel: string = "Higher";
+
+let tempHigherDisabled: boolean = false;
+let tempOrdinaryDisabled: boolean = false;
+let tempFoundationDisabled: boolean = false;
+let tempCommonDisabled: boolean = false;
+
+
 function ChoicesForm() {
   const searchQuery = useSearchParams();
 
   let [selectionArray, setSelectionArray] = useAtom(selectionArrayAtom);
   let [examListAtom, setExamListAtom] = useAtom(examPaperListAtom)
 
-  let certSet = "lc"
-  let subjectSet = "3"
-  let yearSet = "2022"
-  let levelSet = "Higher"
-  let langSet = "EV"
 
   if (searchQuery) {
     certSet = searchQuery.has("cert") ? searchQuery.get("cert") as string : "lc";
@@ -50,30 +61,23 @@ function ChoicesForm() {
   const [examList, setExamList] = useState<string[][]>([]);
   const [filterQuery, setFilterQuery] = useState('')
 
-  let newExamList: string[][];
-  let currentLevel: string = "Higher";
 
   let tempSubject: string = subject;
   let tempYear: string = year;
-
-  let tempHigherDisabled: boolean = false;
-  let tempOrdinaryDisabled: boolean = false;
-  let tempFoundationDisabled: boolean = false;
-  let tempCommonDisabled: boolean = false;
 
   type ExamPaper = {
     details: string;
     url: string;
   };
 
+  determineLevelAvailability()
+
   useEffect(() => {
     setSelectionArray([certificate, subject, year, language, level]);
     determineLanguageAvailability();
     determineLevelAvailability();
-  }, [certificate, subject, year]);
-
-  useEffect(() => {
     grabExamUrls(certificate, subject, year, language, level); // Sets up examList
+
   }, [certificate, subject, year, language, level, englishDisabled, irishDisabled]);
 
   function addExamToList(subjectId: string, examName: string, examUrl: string, category: string, year: string) {
@@ -142,6 +146,10 @@ function ChoicesForm() {
     determineLevelAvailability();
     ensureSubjectHasLevel(currentLevel);
     setLevel(currentLevel)
+    if (checkIfAllYears()) {
+      handleAllYearOption();
+    }
+    console.log(level, currentLevel)
   }
 
   function handleAllYearOption() {
@@ -168,16 +176,15 @@ function ChoicesForm() {
 
           let isCorrectLanguage = docName.includes(language)
 
-
           let materialKeywords = /(BV|File|Picture|Map|Source)/
 
           let isExamMaterial = (isCorrectLanguage || materialKeywords.test(docName));
-          let isCorrectLevel = (docName.includes(level) || docName.includes("Common") || docName.includes("File"))
-          let isNotFoundationFile = !(!(level == "Foundation") && docName.includes("Foundation") && docName.includes("File"));
+          let isCorrectLevel = (docName.includes(currentLevel) || docName.includes("Common") || docName.includes("File"))
+          let isNotFoundationFile = !(!(currentLevel == "Foundation") && docName.includes("Foundation") && docName.includes("File"));
 
           if (isExamMaterial && isCorrectLevel && isNotFoundationFile) {
             if (catKeys.includes("exampapers")) { // Prevents the "exampapers" key from being accessed if it doesn't exist (edge cases)
-              if (!(currentYearList["exampapers"].some((paperName: ExamPaper) => paperName.details.includes("Foundation") && !(docName.includes("Foundation")) && level == "Foundation"))) { // Sorry if you're reading this. Fix to an obscure bug where Sound Files from both Higher/Ordinary and Foundation would be included when "Foundation" was selected.
+              if (!(currentYearList["exampapers"].some((paperName: ExamPaper) => paperName.details.includes("Foundation") && !(docName.includes("Foundation")) && currentLevel == "Foundation"))) { // Sorry if you're reading this. Fix to an obscure bug where Sound Files from both Higher/Ordinary and Foundation would be included when "Foundation" was selected.
                 addExamToList(subject, docName, docUrl, cat, currentYear);
               }
             }
@@ -209,6 +216,7 @@ function ChoicesForm() {
     } else {
       setLevel(curLevel);
     }
+
   }
 
   function determineLanguageAvailability() {
@@ -242,7 +250,6 @@ function ChoicesForm() {
 
     if ("exampapers" in data[certificate][tempSubject][tempYear]) {
       const exampapers = data[certificate][tempSubject][tempYear]["exampapers"];
-
       tempHigherDisabled = true;
       tempOrdinaryDisabled = true;
       tempFoundationDisabled = true;
@@ -287,6 +294,7 @@ function ChoicesForm() {
   function handleCertChange(val: string) {
     setCertificate(val);
 
+    determineLevelAvailability()
     ensureSubjectHasLevel(currentLevel);
 
     let firstAvailableSubject = Object.keys(data[val])[0];
@@ -311,7 +319,7 @@ function ChoicesForm() {
         setYear(lastKey);
       }
     }
-
+    determineLevelAvailability();
     ensureSubjectHasLevel(currentLevel);
   }
 
@@ -352,6 +360,8 @@ function ChoicesForm() {
       : Object.values(uniqueSubNumsToNames).filter((subjectName) =>
         (subjectName as string).toLowerCase().includes(filterQuery.toLowerCase())
       );
+
+
 
   return (
     <>

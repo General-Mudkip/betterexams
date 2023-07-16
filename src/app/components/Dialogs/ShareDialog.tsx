@@ -9,8 +9,6 @@ function ShareDialog() {
   let [selectionArray, setSelectionArray] = useAtom(selectionArrayAtom);
   let [examList, setExamList] = useAtom(examPaperListAtom)
 
-  console.log(examList)
-
   let shareUrl = `https://www.betterexams.ie?cert=${selectionArray[0]}&subject=${selectionArray[1]}&year=${selectionArray[2]}&lang=${selectionArray[3]}&level=${selectionArray[4]}`
 
   function determineCategoryName(catName: string) {
