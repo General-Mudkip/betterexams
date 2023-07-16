@@ -309,13 +309,14 @@ function ChoicesForm() {
     setSubject(val);
 
     tempSubject = val;
-
     let subjectContainsCurrentYear = data[certificate][val].hasOwnProperty(year)
+
 
     if (!subjectContainsCurrentYear) {
       // If the selected year is invalid, update the year state
       const lastKey = Object.keys(data[certificate][val]).at(-1);
       if (lastKey) {
+        tempYear = lastKey;
         setYear(lastKey);
       }
     }
