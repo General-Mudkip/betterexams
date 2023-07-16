@@ -575,7 +575,7 @@ function ChoicesForm() {
                         }>
 
                           <>
-                            <span className="block truncate font-normal ui-selected:font-medium">
+                            <span className={`block truncate ${currentLevel === "Higher" ? "font-medium" : "font-normal"}`}>
                               Higher
                             </span>
                             <span className={`absolute inset-y-0 left-0 items-center pl-3 text-zinc-200 ${level === "Higher" ? "flex" : "hidden"}`}>
@@ -591,7 +591,7 @@ function ChoicesForm() {
                         }>
 
                           <>
-                            <span className="block truncate font-normal ui-selected:font-medium">
+                            <span className={`block truncate ${currentLevel === "Ordinary" ? "font-medium" : "font-normal"}`}>
                               Ordinary
                             </span>
                             <span className={`absolute inset-y-0 left-0 items-center pl-3 text-zinc-200 ${level === "Ordinary" ? "flex" : "hidden"}`}>
@@ -606,7 +606,7 @@ function ChoicesForm() {
                                                     ${tempFoundationDisabled ? "text-red-500 !bg-red-950/70 italic line-through" : "text-white"}`
                         }>
                           <>
-                            <span className="block truncate font-normal ui-selected:font-medium">
+                            <span className={`block truncate ${currentLevel === "Foundation" ? "font-medium" : "font-normal"}`}>
                               Foundation
                             </span>
                             <span className={`absolute inset-y-0 left-0 items-center pl-3 text-zinc-200 ${level === "Foundation" ? "flex" : "hidden"}`}>
@@ -621,7 +621,7 @@ function ChoicesForm() {
                                                     ${tempCommonDisabled ? "text-red-500 !bg-red-950/70 italic line-through" : "text-white"}`
                         }>
                           <>
-                            <span className="block truncate font-normal ui-selected:font-medium">
+                            <span className={`block truncate ${currentLevel === "Common" ? "font-medium" : "font-normal"}`}>
                               Common
                             </span>
                             <span className={`absolute inset-y-0 left-0 items-center pl-3 text-zinc-200 ${level === "Common" ? "flex" : "hidden"}`}>
