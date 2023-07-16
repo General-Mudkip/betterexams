@@ -30,7 +30,7 @@ function ResourcesDialog() {
       setMarkdownText(uText + rText)
       console.log(response)
       if (rText === "") {
-        setMarkdownText("Nothing for this subject found. Contribute via the form below! :)")
+        setMarkdownText(uText + "No specific links for this subject found.")
       }
     } catch (error) {
       setMarkdownText("We ran into an error! Please contact me using the form in the footer. Thanks :)\n\n\n" + error)
@@ -57,7 +57,7 @@ function ResourcesDialog() {
           >
             <div className="fixed inset-0 overflow-y-auto">
               <div className="flex min-h-full items-center justify-center p-4">
-                <Dialog.Panel className="w-[32rem] p-8 rounded-2xl border-4 border-white bg-zinc-950">
+                <Dialog.Panel className="w-[36rem] p-8 rounded-2xl border-4 border-white bg-zinc-950">
                   <Dialog.Title className="text-3xl font-bold">{subNumsToNames[subjectNumber]} Resources</Dialog.Title>
                   <Dialog.Description>
                     <span className="italic text-slate-400">Feel free to contribute any links via the form below.</span>
