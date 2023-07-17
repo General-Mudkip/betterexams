@@ -5,9 +5,9 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Better Exams | An Alternative To Examinations.ie",
-  keywords: "examinations.ie, exams, leaving cert, junior cert, papers",
-  description: "The best way to search for and access exam papers sourced from examinations.ie",
+  title: "Better Exams | Past Papers Made Easy",
+  keywords: "examinations.ie, exams, leaving cert, junior cert, past papers",
+  description: "The best way to search for past leaving cert exam papers and marking schemes sourced from examinations.ie's material archive.",
 };
 
 export default function RootLayout({
