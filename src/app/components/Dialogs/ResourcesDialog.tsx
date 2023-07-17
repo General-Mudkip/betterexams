@@ -5,6 +5,7 @@ import { resourcesIsOpenAtom } from "../PaperGrid"
 import { selectionArrayAtom } from "../Form"
 import ReactMarkdown from "react-markdown";
 import { useState } from "react";
+import sendWebhook from "../../scripts/discordWebhook"
 
 function ResourcesDialog() {
   let [aboutIsOpen, setAboutIsOpen] = useAtom(resourcesIsOpenAtom);
@@ -14,12 +15,34 @@ function ResourcesDialog() {
   var data = require('../../files/data.json');
   var subNumsToNames = data["subNumsToNames"]
 
+  const WEBHOOK_URL = "https://discord.com/api/webhooks/1130460247123832923/dhWdv0TBvpte2D8k5yrJiSpAcq5GG_2icrwptvQ-TtXYAK8O30rj2B4ECUC3-ld4Alw6"
+
   const subjectNumber = selectionArray[1]
+  const subjectName = subNumsToNames[subjectNumber]
 
   const markdownPath = `/resources/${subjectNumber}.md`
   const universalPath = "/resources/universal.md"
 
   let [markdownText, setMarkdownText] = useState("");
+
+  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    const link = formData.get("link");
+
+    if (link === "") {
+      alert("Please include a link!");
+      return;
+    } else {
+      const content = `**SUBJECT NUMBER:** ${subjectNumber}\n**SUBJECT NAME:** ${subjectName}\n**LINK:** ${link}`
+      const successMessage = "Thank you for your contribution. I'll review the link and add it if it's a good fit. :)"
+
+      sendWebhook(content, successMessage, WEBHOOK_URL)
+    }
+  }
 
   const fetchMarkdownText = async () => {
     try {
@@ -27,7 +50,7 @@ function ResourcesDialog() {
       const uResponse = await fetch(universalPath)
       const rText = await response.text()
       const uText = await uResponse.text()
-      setMarkdownText(uText + rText)
+      setMarkdownText(uText + rText + "---")
       console.log(response)
       if (rText === "") {
         setMarkdownText(uText + "No specific links for this subject found.")
@@ -58,7 +81,7 @@ function ResourcesDialog() {
             <div className="fixed inset-0 overflow-y-auto">
               <div className="flex min-h-full items-center justify-center p-4">
                 <Dialog.Panel className="w-[36rem] p-8 rounded-2xl border-4 border-white bg-zinc-950">
-                  <Dialog.Title className="text-3xl font-bold">{subNumsToNames[subjectNumber]} Resources</Dialog.Title>
+                  <Dialog.Title className="text-3xl font-bold">{subjectName} Resources</Dialog.Title>
                   <Dialog.Description>
                     <span className="italic text-slate-400">Feel free to contribute any links via the form below.</span>
                     <div className="mt-6">
@@ -66,6 +89,16 @@ function ResourcesDialog() {
                         {markdownText}
                       </ReactMarkdown>
                     </div>
+
+                    <form className="mt-6" onSubmit={handleFormSubmit}>
+                      <label htmlFor="link">Contribute a Link:</label>
+                      <div className="max-w-[36rem] mt-1 bg-zinc-900 border-2 py-1 px-2 rounded-md border-white items-center flex flex-row">
+                        <input type="text" id="link" name="link" className="shrink w-0 h-full flex-1 truncate bg-transparent" />
+                        <button className="border-2 border-white p-2 rounded-md ml-2" id="copybutton" >
+                          Send
+                        </button>
+                      </div>
+                    </form>
 
                   </Dialog.Description>
 

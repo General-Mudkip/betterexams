@@ -2,34 +2,12 @@ import { Dialog } from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAtom } from "jotai";
 import { contactIsOpenAtom } from "../Footer";
+import sendWebhook from "../../scripts/discordWebhook"
 
 const WEBHOOK_URL: string = "https://discord.com/api/webhooks/1126870227297255496/Rs5vAbLZ8MbBj0Sz8vYApJuVMh4HhtEXGHEN8yZ73I3Oj9ITubW58o8X1Rxm6h81uF5r";
-const MY_ID: string = "567665494518267904"
 
 function ContactDialog() {
   let [contactIsOpen, setContactIsOpen] = useAtom(contactIsOpenAtom);
-
-  function sendMessageToDiscord(name: string, email: string, message: string) {
-    const payload = {
-      username: "Exam Help Bot",
-      content: `<@${MY_ID}>\n**Name:** ${name}\n**Email:** ${email}\n**Message:** ${message}`,
-    };
-
-    fetch(WEBHOOK_URL, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    }
-    ).then(() => {
-      alert("Message sent! I'll try and get back to you soon.");
-      setContactIsOpen(false);
-    }).catch(error => {
-      alert("Message failed to send! Feel free to email me at bence@mudkip.live");
-      console.error(error);
-    });
-  }
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -41,11 +19,14 @@ function ContactDialog() {
     const emailValue = formData.get("email");
     const messageValue = formData.get("message");
 
+    const content = `**NAME**: ${nameValue}\n**EMAIL**: ${emailValue}\n**MESSAGE**: ${messageValue}`
+    const successMessage = "Your message has been sent succesfully. I'll try to get back to you soon."
+
     if (messageValue === "") {
       alert("Please include a message!");
       return;
     } else {
-      sendMessageToDiscord(nameValue as string, emailValue as string, messageValue as string);
+      sendWebhook(content, successMessage, WEBHOOK_URL)
     }
   }
 
