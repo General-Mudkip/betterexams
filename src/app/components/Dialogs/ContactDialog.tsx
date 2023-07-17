@@ -1,10 +1,12 @@
 import { Dialog } from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAtom } from "jotai";
+import sendWebhook from "../../scripts/discordWebhook";
 import { contactIsOpenAtom } from "../Footer";
-import sendWebhook from "../../scripts/discordWebhook"
+import * as dotenv from 'dotenv';
 
-const WEBHOOK_URL: string = "https://discord.com/api/webhooks/1126870227297255496/Rs5vAbLZ8MbBj0Sz8vYApJuVMh4HhtEXGHEN8yZ73I3Oj9ITubW58o8X1Rxm6h81uF5r";
+dotenv.config()
+const WEBHOOK_URL = process.env.NEXT_PUBLIC_CONTACT_WEBHOOK as string;
 
 function ContactDialog() {
   let [contactIsOpen, setContactIsOpen] = useAtom(contactIsOpenAtom);

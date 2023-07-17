@@ -144,7 +144,6 @@ function ChoicesForm() {
     if (checkIfAllYears()) {
       handleAllYearOption();
     }
-    console.log(level, currentLevel)
   }
 
   function handleAllYearOption() {

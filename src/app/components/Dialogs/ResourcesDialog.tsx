@@ -6,16 +6,17 @@ import { selectionArrayAtom } from "../Form"
 import ReactMarkdown from "react-markdown";
 import { useState } from "react";
 import sendWebhook from "../../scripts/discordWebhook"
+import * as dotenv from 'dotenv';
+
+dotenv.config()
+const WEBHOOK_URL = process.env.NEXT_PUBLIC_RESOURCES_WEBHOOK as string;
 
 function ResourcesDialog() {
   let [aboutIsOpen, setAboutIsOpen] = useAtom(resourcesIsOpenAtom);
   let [selectionArray,] = useAtom(selectionArrayAtom);
 
-
   var data = require('../../files/data.json');
   var subNumsToNames = data["subNumsToNames"]
-
-  const WEBHOOK_URL = "https://discord.com/api/webhooks/1130460247123832923/dhWdv0TBvpte2D8k5yrJiSpAcq5GG_2icrwptvQ-TtXYAK8O30rj2B4ECUC3-ld4Alw6"
 
   const subjectNumber = selectionArray[1]
   const subjectName = subNumsToNames[subjectNumber]
@@ -51,7 +52,6 @@ function ResourcesDialog() {
       const rText = await response.text()
       const uText = await uResponse.text()
       setMarkdownText(uText + rText + "---")
-      console.log(response)
       if (rText === "") {
         setMarkdownText(uText + "No specific links for this subject found.")
       }
