@@ -22,10 +22,10 @@ function ShareDialog() {
         title = "Marking Scheme"; break;
 
       case "deferredexams":
-        title = "Deferred Exams"; break;
+        title = "Deferred Exam"; break;
 
       case "deferredmarkingschemes":
-        title = "Deferred Marking Schemes"; break;
+        title = "Deferred Marking Scheme"; break;
 
       default:
         title = "Unknown";
