@@ -73,7 +73,7 @@ function PaperCard({ type, subject, paperName, year, url }: PaperCardProps) {
         <a href={url} target="_blank">
           <div
             className={`group
-                        w-auto h-auto min-w-[320px] min-h-[8rem lg:min-h-[9rem] border-l-8 p-3 rounded-lg text-white flex flex-col justify-between group bg-zinc-900
+                        w-auto h-auto min-w-[320px] min-h-[8rem lg:min-h-[9rem] border-l-8 p-3 rounded-lg text-white flex flex-col justify-between group bg-zinc-800
                         ${determineCardColour(type)}
                         transform transition-all duration-[350ms] ease-in-out
                         hover:scale-105

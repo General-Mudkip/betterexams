@@ -5,10 +5,20 @@ import ResourcesDialog from "./components/Dialogs/ResourcesDialog";
 import ShareDialog from "./components/Dialogs/ShareDialog"
 import Footer from "./components/Footer";
 import ChoicesForm from "./components/Form";
+import { useAtom } from "jotai";
+import { aboutIsOpenAtom, contactIsOpenAtom } from "./components/Footer"
+import { shareIsOpenAtom, resourcesIsOpenAtom } from "./components/PaperGrid"
 
 export default function Home() {
+  let [aboutIsOpen,] = useAtom(aboutIsOpenAtom);
+  let [contactIsOpen,] = useAtom(contactIsOpenAtom);
+  let [shareIsOpen,] = useAtom(shareIsOpenAtom);
+  let [resourcesIsOpen,] = useAtom(resourcesIsOpenAtom);
+
   return (
-    <main className="min-h-screen h-full flex flex-col -mt-12 items-center p-24 lg:mt-0">
+    <main className={`min-h-screen h-full flex flex-col -mt-12 items-center p-24 lg:mt-0 transition-all duration-300
+    ${aboutIsOpen || contactIsOpen || shareIsOpen || resourcesIsOpen ? "blur" : "blur-0"}
+`} >
       <h1 className="text-6xl font-bold text-center">Better Exams</h1>
       <h2 className="italic text-white/70 mt-1 text-center">An Alternative To Examinations.ie</h2>
 
@@ -22,6 +32,6 @@ export default function Home() {
       <ShareDialog />
       <ResourcesDialog /> {/* TODO: Consolidate this into one component */}
       <Footer />
-    </main>
+    </main >
   );
 }

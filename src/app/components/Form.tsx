@@ -454,7 +454,7 @@ function ChoicesForm() {
                       transition={{ duration: 0.2 }}
                       className="absolute w-full z-50"
                     >
-                      <Combobox.Options static className="mt-2 z-50 py-2 w-full h-full max-h-72 overflow-auto rounded-md bg-gray-950 border-2 border-white text-white">
+                      <Combobox.Options static className="mt-2 z-50 py-2 w-full h-full max-h-72 overflow-auto rounded-md bg-gray-950 border-2 appearance-none border-white text-white">
                         {filteredSubjects.length === 0 && filterQuery !== "" ? (
                           <div className="relative cursor-default select-none py-2 px-4 text-white">
                             No subjects found.
