@@ -51,15 +51,15 @@ function PaperCard({ type, subject, paperName, year, url }: PaperCardProps) {
   function determineCardColour(catName: string) {
     switch (catName) {
       case "exampapers":
-        return "border-l-blue-500 hover:border-l-blue-600";
+        return "border-l-blue-500 shadow-[inset_14px_0_22px_-19px_rgba(59,130,246)] hover:border-l-blue-600";
       case "markingschemes":
-        return "border-l-red-500 hover:border-l-red-500";
+        return "border-l-red-500 shadow-[inset_14px_0_22px_-19px_rgba(239,68,68)] hover:border-l-red-500";
       case "deferredexams":
-        return "border-l-green-500 hover:border-l-green-600";
+        return "border-l-green-500 shadow-[inset_14px_0_22px_-19px_rgba(34,197,94)] hover:border-l-green-600";
       case "deferredmarkingschemes":
-        return "border-l-yellow-300 hover:border-l-yellow-400";
+        return "border-l-yellow-300 shadow-[inset_14px_0_22px_-19px_rgba(253,224,74)] hover:border-l-yellow-400";
       default:
-        return "border-l-slate-300 hover:border-l-slate-400";
+        return "border-l-slate-300 shadow-[inset_14px_0_22px_-19px_rgba(253,224,74)] hover:border-l-slate-400";
     }
   }
 
@@ -73,7 +73,7 @@ function PaperCard({ type, subject, paperName, year, url }: PaperCardProps) {
         <a href={url} target="_blank">
           <div
             className={`group
-                        w-auto h-auto min-w-[320px] min-h-[8rem lg:min-h-[9rem] border-l-8 p-3 rounded-lg text-white flex flex-col justify-between group bg-[#222225]
+                        w-auto h-auto min-w-[320px] min-h-[8rem lg:min-h-[9rem] border-l-8 p-3 rounded-lg text-white flex flex-col borderl-blue-500 justify-between group bg-[#222225]
                         ${determineCardColour(type)}
                         transform transition-all duration-[350ms] ease-in-out
                         hover:scale-105
