@@ -37,7 +37,7 @@ function PaperGrid({ examPaperList }: PaperGridProps) {
         <div className="flex flex-row flex-wrap gap-x-4 justify-center">
           <button
             className="mb-5 whitespace-nowrap w-min
-                    bg-zinc-900 p-3 rounded-lg border-white border-2 text-white            
+                    bg-zinc-900 p-3 rounded-lg border-[#303436] border-2 text-white            
                     "
             onClick={() => setShareIsOpen(true)}
           >
@@ -46,7 +46,7 @@ function PaperGrid({ examPaperList }: PaperGridProps) {
 
           <button
             className="mb-5 whitespace-nowrap w-min
-                    bg-zinc-900 p-3 rounded-lg border-white border-2 text-white            
+                    bg-zinc-900 p-3 rounded-lg border-[#303436] border-2 text-white            
                     "
             onClick={() => setResourcesIsOpen(true)}
           >

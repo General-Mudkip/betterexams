@@ -366,7 +366,7 @@ function ChoicesForm() {
           <Listbox name="cert" value={certificate} onChange={handleCertChange}>
             {({ open }) => (
               <div className="relative">
-                <Listbox.Button className="text-white text-left bg-zinc-900 border-2 border-spacing-2 border-white w-full rounded-md p-3 hover:border-slate-400 transition-all duration-200">
+                <Listbox.Button className="text-white text-left bg-zinc-900 border-2 border-spacing-2 border-[#303436] w-full rounded-md p-3 hover:border-[#494f52] hover:bg-[#494f52] transition-all duration-200">
                   {(certificate === "lc" ? "Leaving Certificate" : "Junior Certificate")}
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <ChevronUpDownIcon
@@ -385,7 +385,7 @@ function ChoicesForm() {
                       transition={{ duration: 0.2 }}
                       className="absolute w-full z-50"
                     >
-                      <Listbox.Options static className="mt-2 z-50 h-full overflow-auto rounded-md bg-gray-950 border-2 border-white text-white">
+                      <Listbox.Options static className="mt-2 z-50 h-full overflow-auto rounded-md bg-gray-950 border-2 border-[#303436] text-white">
                         <Listbox.Option value="lc" className={
                           `top-0 relative pl-10 ui-selected:bg-gray-700 py-[0.3rem]
                                                     ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100`
@@ -430,7 +430,7 @@ function ChoicesForm() {
           <Combobox name="subject" value={subject} onChange={handleSubjectChange}>
             {({ open }) => (
               <div className="relative h-[52px]">
-                <div className="relative h-full w-full cursor-pointer overflow-hidden rounded-md text-left border-2 border-white">
+                <div className="relative h-full w-full cursor-pointer overflow-hidden rounded-md text-left border-2 border-[#303436]">
                   <Combobox.Input
                     className="w-full h-full border-none pl-3 pr-10 leading-5 bg-zinc-900 text-white focus:ring-0"
                     displayValue={() => subNumsToNames[subject]}
@@ -454,7 +454,7 @@ function ChoicesForm() {
                       transition={{ duration: 0.2 }}
                       className="absolute w-full z-50"
                     >
-                      <Combobox.Options static className="mt-2 z-50 py-2 w-full h-full max-h-72 overflow-auto rounded-md bg-gray-950 border-2 appearance-none border-white text-white">
+                      <Combobox.Options static className="mt-2 z-50 py-2 w-full h-full max-h-72 overflow-auto rounded-md bg-gray-950 border-2 appearance-none border-[#303436] text-white">
                         {filteredSubjects.length === 0 && filterQuery !== "" ? (
                           <div className="relative cursor-default select-none py-2 px-4 text-white">
                             No subjects found.
@@ -495,7 +495,7 @@ function ChoicesForm() {
           <Listbox name="year" value={year} onChange={handleYearChange}>
             {({ open }) => (
               <div className="relative">
-                <Listbox.Button className="text-white text-left bg-zinc-900 border-2 border-spacing-2 border-white w-full rounded-md p-3 hover:border-slate-400 transition-all duration-200">
+                <Listbox.Button className="text-white text-left bg-zinc-900 border-2 border-spacing-2 border-[#303436] w-full rounded-md p-3 hover:border-slate-400 transition-all duration-200">
                   {year}
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <ChevronUpDownIcon
@@ -514,7 +514,7 @@ function ChoicesForm() {
                       transition={{ duration: 0.2 }}
                       className="absolute w-full z-50"
                     >
-                      <Listbox.Options static className="max-h-64 mt-2 border-2 h-full border-white overflow-auto z-50 w-full rounded-md bg-gray-950 text-white">
+                      <Listbox.Options static className="max-h-64 mt-2 border-2 h-full border-[#303436] overflow-auto z-50 w-full rounded-md bg-gray-950 text-white">
                         <Listbox.Option key="allyears" value="All Years" className={
                           `top-0 relative pl-10 ui-selected:bg-gray-700 py-[0.3rem] pt-[0.5rem]
                                                 ui-active:bg-zinc-800 ui-not-active:bg-black`
@@ -542,7 +542,7 @@ function ChoicesForm() {
           <Listbox name="level" defaultValue={level} onChange={handleLevelChange}>
             {({ open }) => (
               <div className="relative">
-                <Listbox.Button className="text-white text-left bg-zinc-900 border-2 border-spacing-2 border-white w-full rounded-md p-3 hover:border-slate-400 transition-all duration-200">
+                <Listbox.Button className="text-white text-left bg-zinc-900 border-2 border-spacing-2 border-[#303436] w-full rounded-md p-3 hover:border-slate-400 transition-all duration-200">
                   {level}
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <ChevronUpDownIcon
@@ -561,7 +561,7 @@ function ChoicesForm() {
                       transition={{ duration: 0.2 }}
                       className="absolute w-full z-50"
                     >
-                      <Listbox.Options static className="mt-2 h-full overflow-y-auto rounded-md bg-gray-950 border-2 border-white">
+                      <Listbox.Options static className="mt-2 h-full overflow-y-auto rounded-md bg-gray-950 border-2 border-[#303436]">
                         <Listbox.Option value="Higher" disabled={tempHigherDisabled} className={
                           `top-0 relative pl-10 ui-selected:bg-gray-700 py-[0.3rem] pt-[0.5rem]
                                                     ui-active:bg-zinc-800 ui-not-active:bg-black text-red transition-all duration-100
@@ -634,17 +634,17 @@ function ChoicesForm() {
 
         <div className="inline-flex">
           <button onClick={() => setLanguage("EV")} type="button" className={`text-white border-2 py-2 px-4 rounded-l
-                    enabled:hover:bg-zinc-800
+                    enabled:hover:bg-zinc-800 border-[#303436] hover:border-slate-400
                     disabled:text-slate-300 disabled:italic
-                    ${language === "EV" ? "bg-zinc-900 font-bold" : "bg-zinc-900 font-normal"}
+                    ${language === "EV" ? "bg-[#222222] font-bold border-" : "bg-zinc-900 font-normal"}
                     `}
             disabled={englishDisabled}>
             English
           </button>
           <button onClick={() => setLanguage("IV")} type="button" className={`text-white border-2 py-2 px-4 rounded-r
-                    enabled:hover:bg-zinc-800
+                    enabled:hover:bg-zinc-800 border-[#303436] hover:border-slate-400
                     disabled:text-slate-300 disabled:italic
-                    ${language === "IV" ? "bg-zinc-900 font-bold" : "bg-zinc-900 font-normal"}
+                    ${language === "IV" ? "bg-[#222222] font-bold" : "bg-zinc-900 font-normal"}
                     `}
             disabled={irishDisabled}>
             Irish
