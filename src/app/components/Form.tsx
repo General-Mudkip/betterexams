@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
-import { useState, useEffect } from 'react';
-import PaperGrid from './PaperGrid';
 import { Combobox, Listbox } from '@headlessui/react';
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
-import { AnimatePresence, motion } from "framer-motion"
-import { useSearchParams } from "next/navigation";
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import { AnimatePresence, motion } from "framer-motion";
 import { atom, useAtom } from "jotai";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from 'react';
+import PaperGrid from './PaperGrid';
 
 // INITIALISATION
 var data = require('../files/data.json');
@@ -50,9 +50,6 @@ function ChoicesForm() {
   const [subject, setSubject] = useState<string>(subjectSet);
 
   const [year, setYear] = useState<string>(yearSet);
-  if (year == "all") {
-    setYear("All Years")
-  }
 
   const [language, setLanguage] = useState<string>(langSet);
   const [level, setLevel] = useState<string>(levelSet);
@@ -662,5 +659,5 @@ function ChoicesForm() {
 
 }
 
-export { selectionArrayAtom, examPaperListAtom }
+export { examPaperListAtom, selectionArrayAtom };
 export default ChoicesForm;
