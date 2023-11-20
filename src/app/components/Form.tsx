@@ -48,7 +48,11 @@ function ChoicesForm() {
 
   const [certificate, setCertificate] = useState<string>(certSet);
   const [subject, setSubject] = useState<string>(subjectSet);
+
   const [year, setYear] = useState<string>(yearSet);
+  if (year == "all") {
+    setYear("All Years")
+  }
 
   const [language, setLanguage] = useState<string>(langSet);
   const [level, setLevel] = useState<string>(levelSet);
