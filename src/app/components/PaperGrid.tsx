@@ -1,5 +1,6 @@
 import PaperCard from "./PaperCard";
 import { atom, useAtom } from "jotai";
+import { Switch } from '@headlessui/react';
 
 interface PaperGridProps {
   examPaperList: string[][];
@@ -7,11 +8,13 @@ interface PaperGridProps {
 
 let shareIsOpenAtom = atom(false)
 let resourcesIsOpenAtom = atom(false)
+let isCompactAtom = atom(false)
 
 function PaperGrid({ examPaperList }: PaperGridProps) {
 
   let [, setShareIsOpen] = useAtom(shareIsOpenAtom)
   let [, setResourcesIsOpen] = useAtom(resourcesIsOpenAtom)
+  let [isCompact, setIsCompact] = useAtom(isCompactAtom)
 
   const years: string[] = [];
   for (const element of examPaperList) {
@@ -52,9 +55,25 @@ function PaperGrid({ examPaperList }: PaperGridProps) {
           >
             {examPaperList[0][1]} Resources
           </button>
+
+          <div className="flex mb-5 items-center text-white">
+            <input
+              type="checkbox"
+              checked={isCompact}
+              onChange={() => setIsCompact(!isCompact)}
+              className="flex h-6 w-6 shrink-0 cursor-pointer rounded-full border-2 border-[#303436] transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+              id="compactModeCheckbox"
+            />
+            <label
+              htmlFor="compactModeCheckbox"
+              className="ml-2"
+            >
+              Compact Mode?
+            </label>
+          </div>
         </div>
         {
-          nonDeferredPapers.length > 0 && (
+          nonDeferredPapers.length > 0 && !isCompact && (
             <div className="flex flex-row flex-wrap gap-8 justify-center">
               {nonDeferredPapers.map((paper, index) => (
                 <PaperCard
@@ -77,9 +96,57 @@ function PaperGrid({ examPaperList }: PaperGridProps) {
         }
 
         {
-          deferredPapers.length > 0 && (
+          nonDeferredPapers.length > 0 && isCompact && (
+            <div className="justify-center">
+              {nonDeferredPapers.map((paper, index) => (
+                <PaperCard
+                  key={
+                    paper[0] +
+                    paper[1] +
+                    paper[2] +
+                    paper[3] +
+                    index
+                  }
+                  type={paper[0]}
+                  subject={paper[1]}
+                  paperName={paper[2]}
+                  year={paper[3]}
+                  url={paper[4]}
+                />
+              ))}
+            </div>
+          )
+        }
+
+        {
+          deferredPapers.length > 0 && !isCompact && (
             <>
               <div className="flex flex-row flex-wrap gap-8 mt-12 justify-center">
+                {deferredPapers.map((paper, index) => (
+                  <PaperCard
+                    key={
+                      paper[0] +
+                      paper[1] +
+                      paper[2] +
+                      paper[3] +
+                      index
+                    }
+                    type={paper[0]}
+                    subject={paper[1]}
+                    paperName={paper[2]}
+                    year={paper[3]}
+                    url={paper[4]}
+                  />
+                ))}
+              </div>
+            </>
+          )
+        }
+
+        {
+          deferredPapers.length > 0 && isCompact && (
+            <>
+              <div className="justify-center mt-8">
                 {deferredPapers.map((paper, index) => (
                   <PaperCard
                     key={
@@ -103,42 +170,115 @@ function PaperGrid({ examPaperList }: PaperGridProps) {
       </div >
     );
   } else {
-    return (
-      <div className="justify-center max-w-[85rem]">
-        {
-          years.map((yr: string) => (
-            <div className="flex flex-col flex-wrap" key={yr}>
-              <h1 className="text-white text-3xl ml-4 mt-6">{yr}</h1>
-              <hr />
-              <div className="flex flex-row flex-wrap gap-8 mt-8 justify-center">
-                {
-                  examPaperList.filter((paper) => paper[3].includes(yr)).map((paper, index) => (
-                    <PaperCard
-                      key={
-                        paper[0] +
-                        paper[1] +
-                        paper[2] +
-                        paper[3] +
-                        index
-                      }
-                      type={paper[0]}
-                      subject={paper[1]}
-                      paperName={paper[2]}
-                      year={paper[3]}
-                      url={paper[4]}
-                    />
+    if (isCompact) {
+      return (
+        <div>
+          <div className="flex mt-5 items-center justify-center text-white">
+            <input
+              type="checkbox"
+              checked={isCompact}
+              onChange={() => setIsCompact(!isCompact)}
+              className="flex h-6 w-6 shrink-0 cursor-pointer rounded-full border-2 border-[#303436] transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+              id="compactModeCheckbox"
+            />
+            <label
+              htmlFor="compactModeCheckbox"
+              className="ml-2"
+            >
+              Compact Mode?
+            </label>
+          </div>
+          <div className="justify-center max-w-[85rem]">
+            {
+              years.map((yr: string) => (
+                <div className="flex flex-col flex-wrap" key={yr}>
+                  <h1 className="text-white text-3xl ml-4 mt-6">{yr}</h1>
+                  <hr />
+                  <div className=" mt-8 justify-center">
+                    {
+                      examPaperList.filter((paper) => paper[3].includes(yr)).map((paper, index) => (
+                        <PaperCard
+                          key={
+                            paper[0] +
+                            paper[1] +
+                            paper[2] +
+                            paper[3] +
+                            index
+                          }
+                          type={paper[0]}
+                          subject={paper[1]}
+                          paperName={paper[2]}
+                          year={paper[3]}
+                          url={paper[4]}
+                        />
 
-                  ))
-                }
-              </div>
-            </div>
-          )
-          )
-        }
-      </div >
-    )
+                      ))
+                    }
+                  </div>
+                </div>
+
+              )
+              )
+            }
+          </div>
+        </div >
+      )
+
+    } else {
+      return (
+        <div>
+          <div className="flex mt-5 items-center justify-center text-white">
+            <input
+              type="checkbox"
+              checked={isCompact}
+              onChange={() => setIsCompact(!isCompact)}
+              className="flex h-6 w-6 shrink-0 cursor-pointer rounded-full border-2 border-[#303436] transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+              id="compactModeCheckbox"
+            />
+            <label
+              htmlFor="compactModeCheckbox"
+              className="ml-2"
+            >
+              Compact Mode?
+            </label>
+          </div>
+          <div className="justify-center max-w-[85rem]">
+            {
+              years.map((yr: string) => (
+                <div className="flex flex-col flex-wrap" key={yr}>
+                  <h1 className="text-white text-3xl ml-4 mt-6">{yr}</h1>
+                  <hr />
+                  <div className="flex flex-row flex-wrap gap-8 mt-8 justify-center">
+                    {
+                      examPaperList.filter((paper) => paper[3].includes(yr)).map((paper, index) => (
+                        <PaperCard
+                          key={
+                            paper[0] +
+                            paper[1] +
+                            paper[2] +
+                            paper[3] +
+                            index
+                          }
+                          type={paper[0]}
+                          subject={paper[1]}
+                          paperName={paper[2]}
+                          year={paper[3]}
+                          url={paper[4]}
+                        />
+
+                      ))
+                    }
+                  </div>
+                </div>
+              )
+              )
+            }
+          </div >
+        </div>
+      )
+    }
   }
 }
 
-export { shareIsOpenAtom, resourcesIsOpenAtom };
+export { shareIsOpenAtom, resourcesIsOpenAtom, isCompactAtom };
 export default PaperGrid;

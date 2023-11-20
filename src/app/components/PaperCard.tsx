@@ -1,4 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { isCompactAtom } from "./PaperGrid";
+import { atom, useAtom } from "jotai";
 
 interface PaperCardProps {
   type: string;
@@ -9,6 +11,9 @@ interface PaperCardProps {
 }
 
 function PaperCard({ type, subject, paperName, year, url }: PaperCardProps) {
+
+  let [isCompact,] = useAtom(isCompactAtom)
+
   function determineCategoryName(catName: string) {
     let title: string;
 
@@ -63,42 +68,52 @@ function PaperCard({ type, subject, paperName, year, url }: PaperCardProps) {
     }
   }
 
-  return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0.7, y: 25 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, type: "spring", bounce: 0.35 }}
-      >
-        <a href={url} target="_blank">
-          <div
-            className={`group
+  if (isCompact) {
+    return (
+      <li>
+        <a href={url} target="_blank" className="text-white underline">
+          {determineCategoryName(type)} - {paperName}
+        </a>
+      </li>
+    )
+  } else {
+    return (
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0.7, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, type: "spring", bounce: 0.35 }}
+        >
+          <a href={url} target="_blank">
+            <div
+              className={`group
                         w-auto h-auto min-w-[320px] min-h-[8rem lg:min-h-[9rem] border-l-8 p-3 rounded-lg text-white flex flex-col borderl-blue-500 justify-between group bg-[#222225]
                         ${determineCardColour(type)}
                         transform transition-all duration-[350ms] ease-in-out
                         hover:scale-105
                         sm:w-96
                         `}
-          >
-            <div>
-              <h3>
-                {determineEmoji()} <span className="italic">{determineCategoryName(type)} • {subject}</span>
-              </h3>
-              <h1 className="text-2xl font-bold mt-1">
-                {paperName}
-              </h1>
-            </div>
+            >
+              <div>
+                <h3>
+                  {determineEmoji()} <span className="italic">{determineCategoryName(type)} • {subject}</span>
+                </h3>
+                <h1 className="text-2xl font-bold mt-1">
+                  {paperName}
+                </h1>
+              </div>
 
-            <div>
-              <p className="font-mono italic text-slate-300 self-end">
-                {year}
-              </p>
+              <div>
+                <p className="font-mono italic text-slate-300 self-end">
+                  {year}
+                </p>
+              </div>
             </div>
-          </div>
-        </a>
-      </motion.div>
-    </AnimatePresence>
-  );
+          </a>
+        </motion.div>
+      </AnimatePresence>
+    );
+  }
 }
 
 export default PaperCard;
