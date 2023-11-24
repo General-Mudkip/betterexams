@@ -12,14 +12,14 @@ import PaperGrid from './PaperGrid';
 var data = require('../files/data.json');
 var subNumsToNames = data["subNumsToNames"]
 
-let selectionArrayAtom = atom(["lc", "3", "2022", "EV", "Higher"]);
+let selectionArrayAtom = atom(["lc", "3", "2023", "EV", "Higher"]);
 let examPaperListAtom = atom([[""]])
 
 const url: string = "https://www.examinations.ie/archive";
 
 let certSet = "lc"
 let subjectSet = "3"
-let yearSet = "2022"
+let yearSet = "2023"
 let levelSet = "Higher"
 let langSet = "EV"
 
@@ -41,7 +41,7 @@ function ChoicesForm() {
   if (searchQuery) {
     certSet = searchQuery.has("cert") ? searchQuery.get("cert") as string : "lc";
     subjectSet = searchQuery.has("subject") ? searchQuery.get("subject") as string : "3";
-    yearSet = searchQuery.has("year") ? searchQuery.get("year") as string : "2022";
+    yearSet = searchQuery.has("year") ? searchQuery.get("year") as string : "2023";
     levelSet = searchQuery.has("level") ? searchQuery.get("level") as string : "Higher";
     langSet = searchQuery.has("lang") ? searchQuery.get("lang") as string : "EV";
   }
