@@ -352,10 +352,10 @@ function ChoicesForm() {
 
   const filteredSubjects =
     filterQuery === ''
-      ? Object.values(uniqueSubNumsToNames)
+      ? Object.values(uniqueSubNumsToNames).sort()
       : Object.values(uniqueSubNumsToNames).filter((subjectName) =>
         (subjectName as string).toLowerCase().includes(filterQuery.toLowerCase())
-      );
+      ).sort();
 
 
 
