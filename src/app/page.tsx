@@ -2,36 +2,43 @@
 import AboutDialog from "./components/Dialogs/AboutDialog";
 import ContactDialog from "./components/Dialogs/ContactDialog";
 import ResourcesDialog from "./components/Dialogs/ResourcesDialog";
-import ShareDialog from "./components/Dialogs/ShareDialog"
+import ShareDialog from "./components/Dialogs/ShareDialog";
+import FeedbackToast from "./components/FeedbackToast";
 import Footer from "./components/Footer";
 import ChoicesForm from "./components/Form";
 import { useAtom } from "jotai";
-import { aboutIsOpenAtom, contactIsOpenAtom } from "./components/Footer"
-import { shareIsOpenAtom, resourcesIsOpenAtom } from "./components/PaperGrid"
+import { aboutIsOpenAtom, contactIsOpenAtom } from "./components/Footer";
+import { shareIsOpenAtom, resourcesIsOpenAtom } from "./components/PaperGrid";
 
 export default function Home() {
-  let [aboutIsOpen,] = useAtom(aboutIsOpenAtom);
-  let [contactIsOpen,] = useAtom(contactIsOpenAtom);
-  let [shareIsOpen,] = useAtom(shareIsOpenAtom);
-  let [resourcesIsOpen,] = useAtom(resourcesIsOpenAtom);
+  let [aboutIsOpen] = useAtom(aboutIsOpenAtom);
+  let [contactIsOpen] = useAtom(contactIsOpenAtom);
+  let [shareIsOpen] = useAtom(shareIsOpenAtom);
+  let [resourcesIsOpen] = useAtom(resourcesIsOpenAtom);
 
   return (
-    <main className={`min-h-screen h-full flex flex-col -mt-12 items-center p-24 lg:mt-0 transition-all duration-300
-    ${aboutIsOpen || contactIsOpen || shareIsOpen || resourcesIsOpen ? "blur" : "blur-0"}
-`} >
+    <main
+      className={`min-h-screen h-full flex flex-col -mt-12 items-center p-24 lg:mt-0 transition-all duration-300
+    ${
+      aboutIsOpen || contactIsOpen || shareIsOpen || resourcesIsOpen
+        ? "blur"
+        : "blur-0"
+    }
+`}
+    >
       <h1 className="text-6xl font-bold text-center">Better Exams</h1>
-      <h2 className="italic text-white/70 mt-1 text-center">An Alternative To Examinations.ie</h2>
-
+      <h2 className="italic text-white/70 mt-1 text-center">
+        An Alternative To Examinations.ie
+      </h2>
       <div className="text-slate-400 items-center h-full mt-8 md:mt-14">
         <ChoicesForm />
       </div>
-
       <div className="flex-grow mt-14" />
       <AboutDialog />
       <ContactDialog />
       <ShareDialog />
       <ResourcesDialog /> {/* TODO: Consolidate this into one component */}
       <Footer />
-    </main >
+    </main>
   );
 }
