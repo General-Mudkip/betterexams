@@ -28,16 +28,6 @@ function Footer() {
                     <span className="block max-w-0 bg-red-400 group-hover:max-w-full transition-all duration-300 h-0.5 group-hover:bg-red-500"></span>
                 </button>
 
-                <p>•</p>
-
-                <a
-                    href="https://ko-fi.com/betterexams"
-                    className="group cursor-pointer !bg-transparent text-yellow-400 hover:text-yellow-500 transition-all duration-300"
-                >
-                    Donate
-                    <span className="block max-w-0 bg-yellow-400 group-hover:max-w-full transition-all duration-300 h-0.5 group-hover:bg-yellow-500"></span>
-                </a>
-
                 <a
                     href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     className="text-white hover:text-red-500 transition-all duration-300"
